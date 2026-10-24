@@ -110,6 +110,7 @@
     },
     "why": {
       "type": "editorial-text",
+      "disabled": true,
       "settings": {
         "eyebrow": "",
         "heading": "Softness begins here.",
