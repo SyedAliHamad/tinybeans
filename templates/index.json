@@ -1,51 +1,151 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "winter-hero",
       "settings": {
+        "video": "shopify://files/videos/6949123-hd_1920_1080_25fps.mp4",
         "eyebrow": "",
         "heading": "Warm little layers for winter.",
         "copy": "Soft jackets, knits and rompers for newborns to 3 years.",
         "button": "Shop winter arrivals",
+        "link": "",
         "slide_seconds": 5
       }
     },
     "products": {
       "type": "winter-products",
-      "settings": { "heading": "New for winter", "description": "Warm, soft pieces for colder days.", "limit": 4, "link_text": "View all" }
+      "settings": {
+        "heading": "New for winter",
+        "description": "Warm, soft pieces for colder days.",
+        "collection": "winter-collection",
+        "limit": 4,
+        "link_text": "View all"
+      }
     },
     "promise": {
       "type": "brand-promise",
-      "settings": {},
       "blocks": {
-        "quality": { "type": "benefit", "settings": { "icon": "heart", "title": "Thoughtfully selected", "copy": "Little pieces chosen with care." } },
-        "photos": { "type": "benefit", "settings": { "icon": "camera", "title": "Real photos on request", "copy": "See the details before you order." } },
-        "delivery": { "type": "benefit", "settings": { "icon": "truck", "title": "Delivery across Pakistan", "copy": "Delivery options at checkout." } },
-        "support": { "type": "benefit", "settings": { "icon": "message", "title": "Questions before ordering?", "copy": "Message us for sizes and details." } }
+        "quality": {
+          "type": "benefit",
+          "settings": {
+            "icon": "heart",
+            "title": "Thoughtfully selected",
+            "copy": "Little pieces chosen with care."
+          }
+        },
+        "photos": {
+          "type": "benefit",
+          "settings": {
+            "icon": "camera",
+            "title": "Real photos on request",
+            "copy": "See the details before you order."
+          }
+        },
+        "delivery": {
+          "type": "benefit",
+          "settings": {
+            "icon": "truck",
+            "title": "Delivery across Pakistan",
+            "copy": "Delivery options at checkout."
+          }
+        },
+        "support": {
+          "type": "benefit",
+          "settings": {
+            "icon": "message",
+            "title": "Questions before ordering?",
+            "copy": "Message us for sizes and details."
+          }
+        }
       },
-      "block_order": ["quality", "photos", "delivery", "support"]
+      "block_order": [
+        "quality",
+        "photos",
+        "delivery",
+        "support"
+      ],
+      "settings": {}
     },
     "collections": {
       "type": "collection-tiles",
-      "settings": { "eyebrow": "", "heading": "Something for every little one" },
       "blocks": {
-        "girls": { "type": "tile", "settings": { "title": "Baby girls", "link_label": "Shop girls" } },
-        "boys": { "type": "tile", "settings": { "title": "Baby boys", "link_label": "Shop boys" } }
+        "girls": {
+          "type": "tile",
+          "settings": {
+            "title": "Baby girls",
+            "subheading": "",
+            "link_label": "Shop girls",
+            "image": "shopify://shop_images/girls_section.png",
+            "collection": ""
+          }
+        },
+        "boys": {
+          "type": "tile",
+          "settings": {
+            "title": "Baby boys",
+            "subheading": "",
+            "link_label": "Shop boys",
+            "image": "shopify://shop_images/Cozy_Blue_Bear_Baby_Set.png",
+            "collection": ""
+          }
+        }
       },
-      "block_order": ["girls", "boys"]
+      "block_order": [
+        "girls",
+        "boys"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Something for every little one"
+      }
     },
     "why": {
       "type": "editorial-text",
-      "settings": { "eyebrow": "", "heading": "Softness begins here.", "tinted": true }
+      "settings": {
+        "eyebrow": "",
+        "heading": "Softness begins here.",
+        "copy": "We believe baby clothing should feel special without becoming unnecessarily expensive. Beautiful everyday pieces and thoughtful little details make the difference.",
+        "tinted": true
+      }
     },
     "details": {
       "type": "fabric-detail",
-      "settings": { "eyebrow": "", "heading": "Made to be soft on new skin" }
+      "settings": {
+        "image": "shopify://shop_images/0c5d24bf-eca7-45ec-913b-692be55927c2.png",
+        "eyebrow": "",
+        "heading": "Made to be soft on new skin",
+        "copy": "Look closer at the textures, linings and little finishes that make each piece special.",
+        "link_label": "",
+        "link": ""
+      }
     },
     "story": {
       "type": "centered-story",
-      "settings": { "eyebrow": "", "heading": "Good baby clothes shouldn’t cost a fortune.", "link_label": "Read our story" }
+      "settings": {
+        "eyebrow": "",
+        "heading": "Good baby clothes shouldn’t cost a fortune.",
+        "copy": "Somewhere along the way, newborn essentials became unnecessarily expensive. We started Tiny Beans with a simple belief: quality, comfort and beautiful design should be within reach for more families.",
+        "link_label": "Read our story",
+        "link": ""
+      }
     }
   },
-  "order": ["hero", "products", "promise", "collections", "why", "details", "story"]
+  "order": [
+    "hero",
+    "products",
+    "promise",
+    "collections",
+    "why",
+    "details",
+    "story"
+  ]
 }
