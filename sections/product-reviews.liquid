@@ -5,7 +5,17 @@
   if rating and rating_count > 0
     assign has_rating = true
   endif
-  assign block_count = section.blocks.size
+  assign total_blocks = section.blocks.size
+  assign block_count = 0
+  for block in section.blocks
+    if block.type == 'review'
+      if block.settings.quote != blank
+        assign block_count = block_count | plus: 1
+      endif
+    else
+      assign block_count = block_count | plus: 1
+    endif
+  endfor
   assign show_section = false
   if has_rating or block_count > 0 or request.design_mode
     assign show_section = true
@@ -43,7 +53,11 @@
           {%- endcase -%}
         {%- endfor -%}
         {%- if request.design_mode and block_count == 0 and has_rating == false -%}
-          <p class="tb-editor-hint">{{ 'reviews.editor_hint' | t }}</p>
+          {%- if total_blocks > 0 -%}
+            <p class="tb-editor-hint">{{ 'reviews.editor_hint_empty' | t }}</p>
+          {%- else -%}
+            <p class="tb-editor-hint">{{ 'reviews.editor_hint' | t }}</p>
+          {%- endif -%}
         {%- endif -%}
       </div>
     </div>

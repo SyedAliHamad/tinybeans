@@ -165,6 +165,7 @@
       "one": "Based on {{ count }} review",
       "other": "Based on {{ count }} reviews"
     },
-    "editor_hint": "Add reviews here: install a reviews app (such as Judge.me) and add its block to this section, or add “Shop review” blocks. This message only shows in the theme editor."
+    "editor_hint": "Add reviews here: install a reviews app (such as Judge.me) and add its block to this section, or add “Shop review” blocks. This message only shows in the theme editor.",
+    "editor_hint_empty": "Fill in the “Shop review” blocks in the sidebar with real customer words. Blocks left empty are not shown on your live store. This message only shows in the theme editor."
   }
 }

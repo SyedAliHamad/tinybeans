@@ -1,7 +1,55 @@
 {
   "sections": {
-    "main": { "type": "main-product", "settings": {} },
-    "reviews": { "type": "product-reviews", "settings": { "heading": "What parents say" } }
+    "main": {
+      "type": "main-product",
+      "settings": {}
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "settings": {
+        "heading": "What parents say"
+      },
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "",
+            "name": "",
+            "city": "",
+            "detail": ""
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "",
+            "name": "",
+            "city": "",
+            "detail": ""
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "",
+            "name": "",
+            "city": "",
+            "detail": ""
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3"
+      ]
+    }
   },
-  "order": ["main", "reviews"]
+  "order": [
+    "main",
+    "reviews"
+  ]
 }
