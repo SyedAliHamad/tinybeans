@@ -1,0 +1,65 @@
+{%- comment -%}
+  Usage: {% render 'product-card', product: product, collection: collection %}
+{%- endcomment -%}
+{%- liquid
+  if collection
+    assign card_url = product.url | within: collection
+  else
+    assign card_url = product.url
+  endif
+  assign hover_image = nil
+  for media in product.media
+    if media.media_type == 'image' and media.id != product.featured_media.id
+      assign hover_image = media
+      break
+    endif
+  endfor
+  assign few_left = false
+  if settings.low_stock_cards and product.available
+    assign tracked_total = 0
+    assign untracked = false
+    for v in product.variants
+      if v.available
+        if v.inventory_management == 'shopify' and v.inventory_policy == 'deny'
+          assign tracked_total = tracked_total | plus: v.inventory_quantity
+        else
+          assign untracked = true
+        endif
+      endif
+    endfor
+    if untracked == false and tracked_total > 0 and tracked_total <= settings.low_stock_threshold
+      assign few_left = true
+    endif
+  endif
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+-%}
+<article class="tb-product-card{% if hover_image %} has-hover-image{% endif %}">
+  <a href="{{ card_url }}" class="tb-product-image" tabindex="-1" aria-hidden="true">
+    {%- if product.featured_media -%}
+      {{ product.featured_media.preview_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '300, 450, 600, 700', sizes: '(max-width: 900px) 50vw, 25vw', alt: '' }}
+      {%- if hover_image -%}
+        {%- comment -%} Second photo, shown on mouse hover. {%- endcomment -%}
+        {%- comment -%} No src here: the theme script adds it only on devices with a mouse. {%- endcomment -%}
+        <img class="tb-card-hover" alt="" sizes="(max-width: 900px) 50vw, 25vw" width="700" height="{{ 700 | divided_by: hover_image.preview_image.aspect_ratio | round }}"
+          data-src="{{ hover_image.preview_image | image_url: width: 700 }}"
+          data-srcset="{{ hover_image.preview_image | image_url: width: 300 }} 300w, {{ hover_image.preview_image | image_url: width: 450 }} 450w, {{ hover_image.preview_image | image_url: width: 600 }} 600w, {{ hover_image.preview_image | image_url: width: 700 }} 700w">
+      {%- endif -%}
+    {%- else -%}
+      <span class="tb-card-placeholder">{{ 'products.photo_placeholder' | t }}</span>
+    {%- endif -%}
+    {%- if product.available == false -%}
+      <span class="tb-badge tb-badge-dark">{{ 'products.sold_out' | t }}</span>
+    {%- elsif on_sale -%}
+      <span class="tb-badge">{{ 'products.sale' | t }}</span>
+    {%- endif -%}
+  </a>
+  <a class="tb-product-name" href="{{ card_url }}">{{ product.title | escape }}</a>
+  <div class="tb-product-price">
+    {{ product.price | money }}
+    {%- if on_sale -%} <del>{{ product.compare_at_price | money }}</del>{%- endif -%}
+  </div>
+  {%- if few_left -%}<p class="tb-few-left">{{ 'products.few_left' | t }}</p>{%- endif -%}
+</article>

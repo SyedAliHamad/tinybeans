@@ -1,0 +1,98 @@
+{%- if section.settings.announcement != blank -%}
+  <div class="announcement">{{ section.settings.announcement | escape }}</div>
+{%- endif -%}
+<header class="site-header">
+  <div class="header-inner">
+    <button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="tinybeans-nav" aria-label="{{ 'general.open_menu' | t }}" data-label-open="{{ 'general.open_menu' | t }}" data-label-close="{{ 'general.close_menu' | t }}">{% render 'icon', name: 'menu' %}</button>
+    <nav class="desktop-nav" aria-label="Main">
+      {%- if section.settings.use_curated_nav -%}
+        <a href="{% if section.settings.winter_collection != blank %}{{ section.settings.winter_collection.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">Winter ’26</a>
+        <a href="{% if section.settings.arrivals_collection != blank %}{{ section.settings.arrivals_collection.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">New Arrivals</a>
+        <a href="{% if section.settings.girls_collection != blank %}{{ section.settings.girls_collection.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">Girls</a>
+        <a href="{% if section.settings.boys_collection != blank %}{{ section.settings.boys_collection.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">Boys</a>
+      {%- else -%}
+      {%- for link in section.settings.menu.links -%}
+        <a href="{{ link.url }}"{% if link.active %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+      {%- else -%}
+        <a href="{{ routes.all_products_collection_url }}">{{ 'general.shop' | t }}</a>
+      {%- endfor -%}
+      {%- endif -%}
+    </nav>
+    <a class="wordmark" href="{{ routes.root_url }}">{{ section.settings.wordmark | default: "Tiny Beans" | escape }}</a>
+    <div class="header-actions">
+      <a class="bag-icon" href="{{ routes.cart_url }}" aria-label="{{ 'general.bag_label' | t: count: cart.item_count }}">
+        {% render 'icon', name: 'bag' %}
+        {%- if cart.item_count > 0 -%}<small aria-hidden="true">{{ cart.item_count }}</small>{%- endif -%}
+      </a>
+    </div>
+  </div>
+  <nav id="tinybeans-nav" class="mobile-nav" data-mobile-menu hidden aria-label="Mobile">
+    {%- if section.settings.use_curated_nav -%}
+        <a href="{% if section.settings.winter_collection != blank %}{{ section.settings.winter_collection.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">Winter ’26</a>
+        <a href="{% if section.settings.arrivals_collection != blank %}{{ section.settings.arrivals_collection.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">New Arrivals</a>
+        <a href="{% if section.settings.girls_collection != blank %}{{ section.settings.girls_collection.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">Girls</a>
+        <a href="{% if section.settings.boys_collection != blank %}{{ section.settings.boys_collection.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">Boys</a>
+      {%- else -%}
+      {%- for link in section.settings.menu.links -%}
+        <a href="{{ link.url }}"{% if link.active %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+      {%- else -%}
+        <a href="{{ routes.all_products_collection_url }}">{{ 'general.shop' | t }}</a>
+      {%- endfor -%}
+      {%- endif -%}
+  </nav>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "tb-header-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement",
+      "label": "Announcement",
+      "info": "Leave blank to hide the bar.",
+      "default": "Winter ’26 is here"
+    },
+    {
+      "type": "text",
+      "id": "wordmark",
+      "label": "Header wordmark",
+      "default": "Tiny Beans"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_curated_nav",
+      "label": "Use Tiny Beans navigation",
+      "default": true,
+      "info": "Displays Winter ’26, New Arrivals, Girls and Boys. Choose collections below; unassigned links open All Products."
+    },
+    {
+      "type": "collection",
+      "id": "winter_collection",
+      "label": "Winter ’26 collection"
+    },
+    {
+      "type": "collection",
+      "id": "arrivals_collection",
+      "label": "New arrivals collection"
+    },
+    {
+      "type": "collection",
+      "id": "girls_collection",
+      "label": "Girls collection"
+    },
+    {
+      "type": "collection",
+      "id": "boys_collection",
+      "label": "Boys collection"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}

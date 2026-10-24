@@ -1,0 +1,47 @@
+<section class="promise-strip">
+  <div class="container promise-grid">
+    {%- for block in section.blocks -%}
+      <div class="promise-item" {{ block.shopify_attributes }}>
+        <div class="promise-icon">{% render 'icon', name: block.settings.icon %}</div>
+        <div>
+          <strong>{{ block.settings.title | escape }}</strong>
+          {%- if block.settings.copy != blank -%}<p>{{ block.settings.copy | escape }}</p>{%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop benefits",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "heart", "options": [
+          { "value": "heart", "label": "Heart" },
+          { "value": "truck", "label": "Delivery truck" },
+          { "value": "camera", "label": "Camera" },
+          { "value": "message", "label": "Message" },
+          { "value": "whatsapp", "label": "WhatsApp" }
+        ] },
+        { "type": "text", "id": "title", "label": "Title", "default": "Thoughtfully selected" },
+        { "type": "text", "id": "copy", "label": "Details", "default": "Little pieces chosen with care." }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [{
+    "name": "Shop benefits",
+    "blocks": [
+      { "type": "benefit", "settings": { "icon": "heart", "title": "Thoughtfully selected", "copy": "Little pieces chosen with care." } },
+      { "type": "benefit", "settings": { "icon": "camera", "title": "Real photos on request", "copy": "See the details before you order." } },
+      { "type": "benefit", "settings": { "icon": "truck", "title": "Delivery across Pakistan", "copy": "Delivery options at checkout." } },
+      { "type": "benefit", "settings": { "icon": "message", "title": "Questions before ordering?", "copy": "Message us for sizes and details." } }
+    ]
+  }]
+}
+{% endschema %}

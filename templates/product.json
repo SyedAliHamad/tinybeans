@@ -1,0 +1,7 @@
+{
+  "sections": {
+    "main": { "type": "main-product", "settings": {} },
+    "reviews": { "type": "product-reviews", "settings": { "heading": "What parents say" } }
+  },
+  "order": ["main", "reviews"]
+}

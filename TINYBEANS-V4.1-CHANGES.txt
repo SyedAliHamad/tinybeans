@@ -1,0 +1,9 @@
+Based on uploaded Claude V4.
+- Tiny Beans (capital T and B) editable header wordmark.
+- Curated four-link header navigation, Shopify collection pickers, legacy menu option.
+- Instagram default: https://www.instagram.com/tinybeans.pk/
+- Floating contact menu shows only WhatsApp and Instagram (email remains available elsewhere).
+- Breakpoint increased to 1150px to prevent nav collision.
+- Original bean symbol on #4d513d dark olive at 512px and 64px; fallback favicon embedded. Theme Editor favicon still takes precedence.
+- No existing store theme has been modified; upload as an unpublished theme.
+- Collection links default to All Products until configured.

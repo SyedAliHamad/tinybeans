@@ -1,0 +1,51 @@
+{
+  "sections": {
+    "hero": {
+      "type": "winter-hero",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Warm little layers for winter.",
+        "copy": "Soft jackets, knits and rompers for newborns to 3 years.",
+        "button": "Shop winter arrivals",
+        "slide_seconds": 5
+      }
+    },
+    "products": {
+      "type": "winter-products",
+      "settings": { "heading": "New for winter", "description": "Warm, soft pieces for colder days.", "limit": 4, "link_text": "View all" }
+    },
+    "promise": {
+      "type": "brand-promise",
+      "settings": {},
+      "blocks": {
+        "quality": { "type": "benefit", "settings": { "icon": "heart", "title": "Thoughtfully selected", "copy": "Little pieces chosen with care." } },
+        "photos": { "type": "benefit", "settings": { "icon": "camera", "title": "Real photos on request", "copy": "See the details before you order." } },
+        "delivery": { "type": "benefit", "settings": { "icon": "truck", "title": "Delivery across Pakistan", "copy": "Delivery options at checkout." } },
+        "support": { "type": "benefit", "settings": { "icon": "message", "title": "Questions before ordering?", "copy": "Message us for sizes and details." } }
+      },
+      "block_order": ["quality", "photos", "delivery", "support"]
+    },
+    "collections": {
+      "type": "collection-tiles",
+      "settings": { "eyebrow": "", "heading": "Something for every little one" },
+      "blocks": {
+        "girls": { "type": "tile", "settings": { "title": "Baby girls", "link_label": "Shop girls" } },
+        "boys": { "type": "tile", "settings": { "title": "Baby boys", "link_label": "Shop boys" } }
+      },
+      "block_order": ["girls", "boys"]
+    },
+    "why": {
+      "type": "editorial-text",
+      "settings": { "eyebrow": "", "heading": "Softness begins here.", "tinted": true }
+    },
+    "details": {
+      "type": "fabric-detail",
+      "settings": { "eyebrow": "", "heading": "Made to be soft on new skin" }
+    },
+    "story": {
+      "type": "centered-story",
+      "settings": { "eyebrow": "", "heading": "Good baby clothes shouldn’t cost a fortune.", "link_label": "Read our story" }
+    }
+  },
+  "order": ["hero", "products", "promise", "collections", "why", "details", "story"]
+}

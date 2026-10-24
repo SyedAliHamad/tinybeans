@@ -1,0 +1,170 @@
+{
+  "general": {
+    "skip_to_content": "Skip to content",
+    "home": "Home",
+    "shop": "Shop",
+    "open_menu": "Open menu",
+    "close_menu": "Close menu",
+    "bag_label": {
+      "one": "Shopping bag, {{ count }} item",
+      "other": "Shopping bag, {{ count }} items"
+    },
+    "contact": {
+      "button_label": "Contact Tiny Beans",
+      "title": "Get in touch",
+      "subtitle": "Choose how you’d like to reach us",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "email": "Email",
+      "setup_hint": "Add your contact details in Theme settings › Contact details.",
+      "whatsapp_greeting": "Hi Tiny Beans, "
+    },
+    "close": "Close"
+  },
+  "products": {
+    "add_to_bag": "Add to bag",
+    "sold_out": "Sold out",
+    "unavailable": "Unavailable",
+    "sale": "Sale",
+    "quantity": "Quantity",
+    "decrease_quantity": "Decrease quantity",
+    "increase_quantity": "Increase quantity",
+    "variant": "Product variant",
+    "show_photo": "Show photo {{ number }}",
+    "ask_whatsapp": "Ask about this on WhatsApp",
+    "whatsapp_message": "Hi Tiny Beans, I have a question about {{ product }}: {{ url }}",
+    "delivery": "Delivery",
+    "payment": "Payment",
+    "exchanges": "Exchanges",
+    "details": "Fabric and feel",
+    "size_fit": "Size and fit",
+    "care": "Care",
+    "photo_placeholder": "Product photo",
+    "size_guide": "Size guide",
+    "sold_out_label": "sold out",
+    "sold_out_value": "{{ value }} is sold out.",
+    "sold_out_in": "{{ value }} is sold out in {{ others }}.",
+    "available_in": "Available in {{ list }}.",
+    "unavailable_combo": "This combination isn’t available. Try another option.",
+    "video": {
+      "open": "Play video of {{ product }} with sound",
+      "close": "Close video",
+      "hide": "Hide video",
+      "title": "{{ product }} video",
+      "play": "Play video"
+    },
+    "whatsapp_editor_hint": "“Ask about this on WhatsApp” is hidden because no WhatsApp number is set. Add it in Theme settings › Contact details. Only you can see this message.",
+    "low_stock": {
+      "one": "Only {{ count }} left",
+      "other": "Only {{ count }} left"
+    },
+    "low_stock_variant": {
+      "one": "Only {{ count }} left in {{ variant }}",
+      "other": "Only {{ count }} left in {{ variant }}"
+    },
+    "few_left": "Few left"
+  },
+  "collections": {
+    "pieces": {
+      "one": "{{ count }} piece",
+      "other": "{{ count }} pieces"
+    },
+    "filters": "Filters",
+    "sort_by": "Sort by",
+    "apply": "Apply filters",
+    "clear": "Clear filters",
+    "empty": "There are no pieces in this collection yet.",
+    "no_matches_title": "Nothing matches these filters",
+    "no_matches_text": "Try a different size or age, or see everything in this collection.",
+    "show_all": "Show all pieces",
+    "size_help_title": "Not sure which size?",
+    "ask_whatsapp": "Ask on WhatsApp",
+    "size_help_message": "Hi Tiny Beans, can you help me choose a size? My baby is ",
+    "filter_button": "Filter",
+    "clear_short": "Clear",
+    "show_results_plain": "Show results",
+    "show_results": {
+      "one": "Show {{ count }} piece",
+      "other": "Show {{ count }} pieces"
+    },
+    "close_filters": "Close filters"
+  },
+  "cart": {
+    "title": "Your bag",
+    "items": {
+      "one": "{{ count }} item",
+      "other": "{{ count }} items"
+    },
+    "empty_title": "Your bag is empty",
+    "empty_text": "Soft little layers are waiting.",
+    "continue": "Continue shopping",
+    "summary": "Order summary",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "you_save": "You save {{ amount }}",
+    "delivery": "Delivery",
+    "delivery_note": "Calculated at checkout",
+    "total": "Estimated total",
+    "update": "Update bag",
+    "checkout": "Checkout",
+    "secure": "Secure checkout by Shopify",
+    "remove": "Remove",
+    "remove_item": "Remove {{ product }}",
+    "quantity_for": "Quantity for {{ product }}",
+    "was": "Was {{ price }}",
+    "each": "{{ price }} each"
+  },
+  "footer": {
+    "shop": "Shop",
+    "help": "Help",
+    "all_products": "All products",
+    "contact_us": "Contact us",
+    "newsletter_title": "Join our little world",
+    "newsletter_text": "New arrivals and little updates in your inbox.",
+    "email_label": "Email address",
+    "email_placeholder": "Your email address",
+    "subscribe": "Subscribe",
+    "subscribed": "Thank you for subscribing.",
+    "follow_instagram": "Follow on Instagram",
+    "policies": "Store policies"
+  },
+  "not_found": {
+    "title": "We couldn’t find that page",
+    "text": "The link may be old, or the page may have moved. Try one of these instead.",
+    "button": "Shop all pieces",
+    "home": "Back to home"
+  },
+  "password": {
+    "opening_soon": "Opening soon",
+    "signup_text": "Leave your email and we’ll let you know when the shop opens.",
+    "email_label": "Email address",
+    "email_placeholder": "Your email address",
+    "notify": "Notify me",
+    "thanks": "Thank you. We’ll email you when we open.",
+    "owner_title": "Store owner?",
+    "password_label": "Password",
+    "enter": "Enter"
+  },
+  "contact_form": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone (optional)",
+    "order": "Order number (optional)",
+    "message": "Message",
+    "send": "Send message",
+    "success": "Thank you. We’ve received your message and will reply soon."
+  },
+  "reviews": {
+    "stars_label": "{{ rating }} out of {{ max }} stars",
+    "count": {
+      "one": "{{ count }} review",
+      "other": "{{ count }} reviews"
+    },
+    "based_on": {
+      "one": "Based on {{ count }} review",
+      "other": "Based on {{ count }} reviews"
+    },
+    "editor_hint": "Add reviews here: install a reviews app (such as Judge.me) and add its block to this section, or add “Shop review” blocks. This message only shows in the theme editor."
+  }
+}

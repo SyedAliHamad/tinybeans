@@ -1,0 +1,19 @@
+{%- comment -%}
+  Star rating. Usage: {% render 'rating-stars', rating: 4.6, max: 5, count: 26, link: '#reviews' %}
+  count and link are optional.
+{%- endcomment -%}
+{%- liquid
+  assign max = max | default: 5
+  assign percent = rating | times: 100.0 | divided_by: max | round: 1
+  assign rating_text = rating | round: 1
+-%}
+<div class="tb-rating">
+  <span class="tb-stars" role="img" aria-label="{{ 'reviews.stars_label' | t: rating: rating_text, max: max }}">
+    <span class="tb-stars-empty" aria-hidden="true">★★★★★</span>
+    <span class="tb-stars-full" aria-hidden="true" style="width: {{ percent }}%">★★★★★</span>
+  </span>
+  {%- if count -%}
+    {%- capture count_text -%}{{ rating_text }} · {{ 'reviews.count' | t: count: count }}{%- endcapture -%}
+    {%- if link != blank -%}<a href="{{ link }}" class="tb-rating-link">{{ count_text }}</a>{%- else -%}<span class="tb-rating-link">{{ count_text }}</span>{%- endif -%}
+  {%- endif -%}
+</div>

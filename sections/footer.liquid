@@ -1,0 +1,94 @@
+{%- assign wa_greeting = 'general.contact.whatsapp_greeting' | t -%}
+{%- capture wa_url -%}{% render 'whatsapp-url', message: wa_greeting %}{%- endcapture -%}
+<footer class="site-footer">
+  <div class="container">
+    {%- if section.settings.show_instagram_banner -%}
+      <div class="instagram-banner">
+        <div>
+          <h2>{{ section.settings.instagram_title | escape }}</h2>
+          <p>{{ section.settings.instagram_copy | escape }}</p>
+        </div>
+        {%- if settings.instagram_url != blank -%}
+          <a href="{{ settings.instagram_url }}" class="outlined-light" target="_blank" rel="noopener">{% render 'icon', name: 'instagram' %}{{ 'footer.follow_instagram' | t }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="footer-links">
+      <div>
+        <h3>{{ 'footer.shop' | t }}</h3>
+        {%- for link in section.settings.shop_menu.links -%}
+          <a href="{{ link.url }}">{{ link.title | escape }}</a>
+        {%- else -%}
+          <a href="{{ routes.all_products_collection_url }}">{{ 'footer.all_products' | t }}</a>
+        {%- endfor -%}
+      </div>
+      <div>
+        <h3>{{ 'footer.help' | t }}</h3>
+        {%- for link in section.settings.help_menu.links -%}
+          <a href="{{ link.url }}">{{ link.title | escape }}</a>
+        {%- else -%}
+          <a href="{{ routes.root_url | append: '/pages/contact' | replace: '//', '/' }}">{{ 'footer.contact_us' | t }}</a>
+        {%- endfor -%}
+        {%- if section.settings.show_policies and shop.policies.size > 0 -%}
+          {%- for policy in shop.policies -%}
+            <a href="{{ policy.url }}">{{ policy.title | escape }}</a>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+      <div>
+        <h3>{{ 'footer.newsletter_title' | t }}</h3>
+        <p>{{ 'footer.newsletter_text' | t }}</p>
+        {%- form 'customer', id: 'FooterNewsletter', class: 'newsletter' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <label for="footer-email" class="visually-hidden">{{ 'footer.email_label' | t }}</label>
+          <input id="footer-email" name="contact[email]" type="email" autocomplete="email" placeholder="{{ 'footer.email_placeholder' | t }}" required>
+          <button type="submit">{{ 'footer.subscribe' | t }}</button>
+          {%- if form.posted_successfully? -%}<p class="newsletter-result" role="status">{{ 'footer.subscribed' | t }}</p>{%- endif -%}
+          {%- if form.errors -%}<div class="newsletter-result" role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+        {%- endform -%}
+        {%- if settings.instagram_url != blank or settings.facebook_url != blank -%}
+          <div class="footer-social">
+            {%- if settings.instagram_url != blank -%}<a href="{{ settings.instagram_url }}" target="_blank" rel="noopener" aria-label="{{ 'general.contact.instagram' | t }}">{% render 'icon', name: 'instagram' %}</a>{%- endif -%}
+            {%- if settings.facebook_url != blank -%}<a href="{{ settings.facebook_url }}" target="_blank" rel="noopener" aria-label="{{ 'general.contact.facebook' | t }}">{% render 'icon', name: 'facebook' %}</a>{%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© {{ 'now' | date: '%Y' }} {{ shop.name | link_to: routes.root_url }}</span>
+      {%- if section.settings.tagline != blank -%}<span>{{ section.settings.tagline | escape }}</span>{%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{%- if section.settings.show_floating_contact -%}
+  <div class="floating-contact">
+    <button class="contact-toggle" type="button" data-contact-toggle aria-expanded="false" aria-controls="ContactPanel" aria-label="{{ 'general.contact.button_label' | t }}">{% render 'icon', name: 'message' %}</button>
+    <div class="contact-panel" id="ContactPanel" data-contact-panel hidden>
+      <strong>{{ 'general.contact.title' | t }}</strong>
+      <p>{{ 'general.contact.subtitle' | t }}</p>
+      {%- if wa_url != blank -%}<a target="_blank" rel="noopener" href="{{ wa_url }}">{% render 'icon', name: 'whatsapp' %}{{ 'general.contact.whatsapp' | t }}</a>{%- endif -%}
+      {%- if settings.instagram_url != blank -%}<a target="_blank" rel="noopener" href="{{ settings.instagram_url }}">{% render 'icon', name: 'instagram' %}{{ 'general.contact.instagram' | t }}</a>{%- endif -%}
+      {%- if wa_url == blank and settings.instagram_url == blank -%}<small>{{ 'general.contact.setup_hint' | t }}</small>{%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "paragraph", "content": "WhatsApp, Instagram, Facebook and email are configured once in Theme settings › Contact details." },
+    { "type": "checkbox", "id": "show_instagram_banner", "label": "Show Instagram banner", "default": true },
+    { "type": "text", "id": "instagram_title", "label": "Instagram banner title", "default": "See new arrivals first" },
+    { "type": "text", "id": "instagram_copy", "label": "Instagram banner text", "default": "Follow Tiny Beans for first looks at every drop and real photos of every piece." },
+    { "type": "link_list", "id": "shop_menu", "label": "Shop menu" },
+    { "type": "link_list", "id": "help_menu", "label": "Help menu" },
+    { "type": "checkbox", "id": "show_policies", "label": "Show store policy links", "info": "Lists the policies you add in Settings › Policies.", "default": true },
+    { "type": "text", "id": "tagline", "label": "Bottom line text", "default": "Softness begins here. Made for little moments." },
+    { "type": "checkbox", "id": "show_floating_contact", "label": "Show floating contact button", "default": true }
+  ]
+}
+{% endschema %}

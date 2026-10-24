@@ -1,0 +1,100 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Tiny Beans",
+    "theme_version": "7.0.0",
+    "theme_author": "Tiny Beans",
+    "theme_documentation_url": "https://tinybeans.pk",
+    "theme_support_url": "https://tinybeans.pk"
+  },
+  {
+    "name": "Brand",
+    "settings": [
+      {
+        "type": "color",
+        "id": "brand_olive",
+        "label": "Brand olive",
+        "default": "#6c6e53"
+      },
+      {
+        "type": "color",
+        "id": "brand_cream",
+        "label": "Brand cream",
+        "default": "#ede1d1"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Square image, at least 96 × 96 px."
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Default social sharing image",
+        "info": "Shown when your homepage or a page without its own image is shared on WhatsApp, Instagram or Facebook. 1200 × 630 px works best."
+      }
+    ]
+  },
+  {
+    "name": "Contact details",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Enter these once. They are used in the floating contact button, the footer, product pages, collection pages and the contact page."
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_number",
+        "label": "WhatsApp number",
+        "info": "With country code, e.g. 923001234567. Spaces, + and dashes are removed automatically."
+      },
+      {
+        "type": "text",
+        "id": "contact_email",
+        "label": "Customer service email"
+      },
+      {
+        "type": "url",
+        "id": "instagram_url",
+        "label": "Instagram profile URL"
+      },
+      {
+        "type": "url",
+        "id": "facebook_url",
+        "label": "Facebook page URL"
+      }
+    ]
+  },
+  {
+    "name": "Stock messages",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Shows a message when stock is low. Only works for products where Shopify tracks stock and “Continue selling when out of stock” is off. Exact stock counts are never shown above the threshold, and never sent to the browser."
+      },
+      {
+        "type": "checkbox",
+        "id": "low_stock_product",
+        "label": "Show “Only X left” on product pages",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "low_stock_cards",
+        "label": "Show “Few left” on product cards",
+        "info": "Cards appear in collections and on the homepage.",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "low_stock_threshold",
+        "label": "Show when this many or fewer are left",
+        "min": 1,
+        "max": 10,
+        "step": 1,
+        "default": 3
+      }
+    ]
+  }
+]

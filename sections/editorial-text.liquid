@@ -1,0 +1,22 @@
+<section class="section editorial-text{% if section.settings.tinted %} tinted{% endif %}">
+  <div class="container editorial-grid">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}<p class="section-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      <h2>{{ section.settings.heading | escape }}</h2>
+    </div>
+    <p>{{ section.settings.copy | escape }}</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Text with heading",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small text above heading", "info": "Leave blank to hide." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Softness begins here." },
+    { "type": "textarea", "id": "copy", "label": "Text", "default": "We believe baby clothing should feel special without becoming unnecessarily expensive. Beautiful everyday pieces and thoughtful little details make the difference." },
+    { "type": "checkbox", "id": "tinted", "label": "Cream background", "default": true }
+  ],
+  "presets": [{ "name": "Text with heading" }]
+}
+{% endschema %}

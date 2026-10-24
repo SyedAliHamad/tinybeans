@@ -1,0 +1,9 @@
+{%- comment -%}
+  Outputs a wa.me link using the number in Theme settings › Contact details.
+  Usage: {% render 'whatsapp-url', message: 'Hi Tiny Beans' %}
+  Outputs nothing if no number is set.
+{%- endcomment -%}
+{%- assign wa_number = settings.whatsapp_number | remove: '+' | remove: ' ' | remove: '-' | remove: '(' | remove: ')' -%}
+{%- if wa_number != blank -%}
+  https://wa.me/{{ wa_number }}{% if message != blank %}?text={{ message | url_encode }}{% endif %}
+{%- endif -%}

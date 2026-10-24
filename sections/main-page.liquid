@@ -1,0 +1,27 @@
+<section class="tb-page container">
+  <nav class="tb-breadcrumb" aria-label="Breadcrumb"><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a> / <span aria-current="page">{{ page.title | escape }}</span></nav>
+  <div class="tb-page-layout{% if section.settings.info_menu == blank %} no-sidebar{% endif %}">
+    {%- if section.settings.info_menu != blank -%}
+      <aside class="tb-page-sidebar">
+        <nav aria-label="{{ section.settings.info_menu.title | escape }}">
+          {%- for link in section.settings.info_menu.links -%}
+            <a href="{{ link.url }}"{% if link.active %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+          {%- endfor -%}
+        </nav>
+      </aside>
+    {%- endif -%}
+    <article class="tb-page-content">
+      <h1>{{ page.title | escape }}</h1>
+      <div class="rte">{{ page.content }}</div>
+    </article>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Information page",
+  "settings": [
+    { "type": "link_list", "id": "info_menu", "label": "Information pages menu", "info": "e.g. Our story, Delivery, Exchanges, FAQs, Contact." }
+  ]
+}
+{% endschema %}

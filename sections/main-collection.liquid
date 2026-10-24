@@ -1,0 +1,119 @@
+{%- liquid
+  assign active_count = 0
+  for filter in collection.filters
+    assign active_count = active_count | plus: filter.active_values.size
+  endfor
+  assign clear_url = collection.url
+  if collection.sort_by != blank
+    assign clear_url = collection.url | append: '?sort_by=' | append: collection.sort_by
+  endif
+  assign size_help_message = 'collections.size_help_message' | t
+-%}
+{%- capture help_url -%}{% render 'whatsapp-url', message: size_help_message %}{%- endcapture -%}
+
+<section class="tb-collection container">
+  <nav class="tb-breadcrumb" aria-label="Breadcrumb"><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a> / <span aria-current="page">{{ collection.title | escape }}</span></nav>
+  <div class="tb-collection-intro">
+    <h1>{{ collection.title | escape }}</h1>
+    {%- if collection.description != blank -%}<div class="rte">{{ collection.description }}</div>{%- endif -%}
+  </div>
+
+  {%- paginate collection.products by section.settings.per_page -%}
+    {%- assign show_one = 'collections.show_results.one' | t: count: '__N__' -%}
+    {%- assign show_other = 'collections.show_results.other' | t: count: '__N__' -%}
+    <form class="tb-filter-form" id="CollectionFilters" method="get" action="{{ collection.url }}" data-filter-form data-section-id="{{ section.id }}" data-show-one="{{ show_one | escape }}" data-show-other="{{ show_other | escape }}">
+      {%- assign shown_filters = 0 -%}
+      <div class="tb-filter-panel" id="FilterPanel-{{ section.id }}" data-filter-panel aria-labelledby="FilterTitle-{{ section.id }}">
+        <div class="tb-sheet-head">
+          <h2 id="FilterTitle-{{ section.id }}">{{ 'collections.filters' | t }}</h2>
+          <button type="button" data-filter-close aria-label="{{ 'collections.close_filters' | t }}">{% render 'icon', name: 'close' %}</button>
+        </div>
+        <div class="tb-filter-pills">
+          {%- for filter in collection.filters -%}
+            {%- if filter.type == 'list' or filter.type == 'boolean' -%}
+              {%- assign shown_filters = shown_filters | plus: 1 -%}
+              <fieldset>
+                <legend>{{ filter.label | escape }}</legend>
+                <div class="tb-filter-row">
+                  {%- for value in filter.values -%}
+                    <label class="tb-filter-pill{% if value.count == 0 and value.active == false %} is-empty{% endif %}">
+                      <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value | escape }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
+                      <span>{{ value.label | escape }}</span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        <div class="tb-sheet-foot">
+          <a class="button button-ghost" href="{{ clear_url }}">{{ 'collections.clear_short' | t }}</a>
+          <button type="submit" class="button" data-filter-apply>{{ 'collections.show_results_plain' | t }}</button>
+        </div>
+      </div>
+      <div class="tb-sheet-backdrop" data-filter-backdrop></div>
+
+      <div class="tb-collection-toolbar" data-collection-toolbar>
+        <span class="tb-count" data-count="{{ collection.products_count }}">{{ 'collections.pieces' | t: count: collection.products_count }}</span>
+        <div class="tb-toolbar-actions">
+          {%- if shown_filters > 0 -%}
+            <button type="button" class="tb-filter-open" data-filter-open aria-controls="FilterPanel-{{ section.id }}" aria-expanded="false">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+              {{ 'collections.filter_button' | t }}{%- if active_count > 0 -%}<span class="tb-filter-n">{{ active_count }}</span>{%- endif -%}
+            </button>
+          {%- endif -%}
+          {%- if active_count > 0 -%}<a class="tb-clear" href="{{ clear_url }}">{{ 'collections.clear' | t }} ({{ active_count }})</a>{%- endif -%}
+          <label for="tb-sort-{{ section.id }}" class="tb-sort-label">{{ 'collections.sort_by' | t }}</label>
+          {%- assign current_sort = collection.sort_by | default: collection.default_sort_by -%}
+          <select id="tb-sort-{{ section.id }}" name="sort_by" data-auto-submit>
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value }}"{% if current_sort == option.value %} selected{% endif %}>{{ option.name | escape }}</option>
+            {%- endfor -%}
+          </select>
+          <button type="submit" class="tb-filter-submit">{{ 'collections.apply' | t }}</button>
+        </div>
+      </div>
+    </form>
+    <p class="tb-mobile-count">{{ 'collections.pieces' | t: count: collection.products_count }}</p>
+
+    {%- if collection.products_count > 0 -%}
+      <div class="product-grid tb-collection-grid">
+        {%- for product in collection.products -%}
+          {% render 'product-card', product: product, collection: collection %}
+        {%- endfor -%}
+      </div>
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" aria-label="Pagination">{{ paginate | default_pagination: next: '›', previous: '‹' }}</nav>
+      {%- endif -%}
+    {%- elsif active_count > 0 -%}
+      <div class="tb-empty">
+        <h2>{{ 'collections.no_matches_title' | t }}</h2>
+        <p>{{ 'collections.no_matches_text' | t }}</p>
+        <a class="button" href="{{ clear_url }}">{{ 'collections.show_all' | t }}</a>
+      </div>
+    {%- else -%}
+      <div class="tb-empty"><p>{{ 'collections.empty' | t }}</p></div>
+    {%- endif -%}
+  {%- endpaginate -%}
+
+  {%- if section.settings.help_text != blank and help_url != blank -%}
+    <aside class="tb-help-panel">
+      <div>
+        <h2>{{ 'collections.size_help_title' | t }}</h2>
+        <p>{{ section.settings.help_text | escape }}</p>
+      </div>
+      <a href="{{ help_url }}" class="button" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}{{ 'collections.ask_whatsapp' | t }}</a>
+    </aside>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Collection products",
+  "settings": [
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "paragraph", "content": "Filters come from Shopify Search & Discovery. Add Size, Age, Girls/Boys and Availability there and they appear here automatically." },
+    { "type": "text", "id": "help_text", "label": "Size help text", "info": "Hidden if no WhatsApp number is set in Theme settings.", "default": "Message us your baby’s age and weight and we’ll suggest the right size." }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,87 @@
+<section class="tb-cart container">
+  <nav class="tb-breadcrumb" aria-label="Breadcrumb"><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a> / <span aria-current="page">{{ 'cart.title' | t }}</span></nav>
+  <h1>{{ 'cart.title' | t }}{% if cart.item_count > 0 %} <span>{{ 'cart.items' | t: count: cart.item_count }}</span>{% endif %}</h1>
+
+  {%- if cart.item_count == 0 -%}
+    <div class="tb-cart-empty">
+      <h2>{{ 'cart.empty_title' | t }}</h2>
+      <p>{{ 'cart.empty_text' | t }}</p>
+      <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+    </div>
+  {%- else -%}
+    {%- liquid
+      assign savings = cart.original_total_price | minus: cart.total_price
+      for item in cart.items
+        if item.variant.compare_at_price > item.variant.price
+          assign item_sale = item.variant.compare_at_price | minus: item.variant.price | times: item.quantity
+          assign savings = savings | plus: item_sale
+        endif
+      endfor
+    -%}
+    <form class="tb-cart-layout" id="CartForm" action="{{ routes.cart_url }}" method="post" novalidate data-cart-form>
+      <div class="tb-cart-items">
+        {%- for item in cart.items -%}
+          <div class="tb-cart-item">
+            <a href="{{ item.url }}" class="tb-cart-image" tabindex="-1" aria-hidden="true">
+              {%- if item.image -%}{{ item.image | image_url: width: 300 | image_tag: loading: 'lazy', widths: '150, 220, 300', sizes: '110px', alt: '' }}{%- endif -%}
+            </a>
+            <div>
+              <div class="tb-cart-item-top">
+                <div>
+                  <a href="{{ item.url }}" class="tb-item-name">{{ item.product.title | escape }}</a>
+                  {%- unless item.product.has_only_default_variant -%}<p class="tb-muted">{{ item.variant.title | escape }}</p>{%- endunless -%}
+                  {%- for property in item.properties -%}
+                    {%- unless property.last == blank or property.first contains '_' -%}<p class="tb-muted">{{ property.first | escape }}: {{ property.last | escape }}</p>{%- endunless -%}
+                  {%- endfor -%}
+                  {%- for allocation in item.line_level_discount_allocations -%}
+                    <p class="tb-discount-line">{{ allocation.discount_application.title | escape }} (−{{ allocation.amount | money }})</p>
+                  {%- endfor -%}
+                </div>
+                <div class="tb-line-price">
+                  {%- if item.original_line_price > item.final_line_price -%}
+                    <del>{{ item.original_line_price | money }}</del>
+                  {%- elsif item.variant.compare_at_price > item.variant.price -%}
+                    <del>{{ item.variant.compare_at_price | times: item.quantity | money }}</del>
+                  {%- endif -%}
+                  <strong>{{ item.final_line_price | money }}</strong>
+                  {%- if item.quantity > 1 -%}{%- assign each_price = item.final_price | money -%}<span class="tb-each">{{ 'cart.each' | t: price: each_price }}</span>{%- endif -%}
+                </div>
+              </div>
+              <div class="tb-cart-controls">
+                <div class="tb-quantity">
+                  <button type="button" data-cart-step="-1" aria-label="{{ 'products.decrease_quantity' | t }}">−</button>
+                  <input type="number" name="updates[]" min="0" value="{{ item.quantity }}" inputmode="numeric" aria-label="{{ 'cart.quantity_for' | t: product: item.product.title }}">
+                  <button type="button" data-cart-step="1" aria-label="{{ 'products.increase_quantity' | t }}">+</button>
+                </div>
+                <a href="{{ item.url_to_remove }}" class="tb-remove" aria-label="{{ 'cart.remove_item' | t: product: item.product.title }}">{{ 'cart.remove' | t }}</a>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+        <a class="tb-continue" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+      </div>
+
+      <aside class="tb-cart-summary" aria-labelledby="CartSummary">
+        <h2 id="CartSummary">{{ 'cart.summary' | t }}</h2>
+        <div><span>{{ 'cart.subtotal' | t }}</span><span>{{ cart.items_subtotal_price | money }}</span></div>
+        {%- for discount in cart.cart_level_discount_applications -%}
+          <div class="tb-discount-line"><span>{{ 'cart.discount' | t }}: {{ discount.title | escape }}</span><span>−{{ discount.total_allocated_amount | money }}</span></div>
+        {%- endfor -%}
+        <div><span>{{ 'cart.delivery' | t }}</span><span>{{ 'cart.delivery_note' | t }}</span></div>
+        <div class="tb-cart-total"><span>{{ 'cart.total' | t }}</span><strong>{{ cart.total_price | money }}</strong></div>
+        {%- if savings > 0 -%}{%- assign savings_money = savings | money -%}<p class="tb-savings">{{ 'cart.you_save' | t: amount: savings_money }}</p>{%- endif -%}
+        <button class="button tb-update" type="submit" name="update">{{ 'cart.update' | t }}</button>
+        <button class="button tb-checkout" type="submit" name="checkout">{{ 'cart.checkout' | t }}</button>
+        <p>{{ 'cart.secure' | t }}</p>
+      </aside>
+    </form>
+    <div class="tb-cart-bar" data-cart-bar>
+      <div class="tb-cart-bar-total"><span>{{ 'cart.total' | t }}</span><strong>{{ cart.total_price | money }}</strong></div>
+      <button class="button" type="submit" name="checkout" form="CartForm">{{ 'cart.checkout' | t }}</button>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{ "name": "Cart", "settings": [] }
+{% endschema %}

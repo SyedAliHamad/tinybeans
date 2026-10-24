@@ -1,0 +1,394 @@
+{%- liquid
+  assign current = product.selected_or_first_available_variant
+  assign main_media = current.featured_media | default: product.featured_media
+  assign product_link = request.origin | append: product.url
+  assign wa_message = 'products.whatsapp_message' | t: product: product.title, url: product_link
+  assign single_option = false
+  if product.options.size == 1 and product.has_only_default_variant == false
+    assign single_option = true
+  endif
+-%}
+{%- liquid
+  assign size_guide = product.metafields.custom.size_guide | metafield_tag
+  if product.metafields.custom.size_guide == blank
+    assign size_guide = section.settings.sizing_copy | newline_to_br
+  endif
+  assign care = product.metafields.custom.care | metafield_tag
+  if product.metafields.custom.care == blank
+    assign care = section.settings.care_copy | newline_to_br
+  endif
+-%}
+
+{%- capture wa_url -%}{% render 'whatsapp-url', message: wa_message %}{%- endcapture -%}
+
+<section class="tb-product container" data-product-section data-product-url="{{ product.url }}">
+  <nav class="tb-breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a> /
+    {% if collection %}<a href="{{ collection.url }}">{{ collection.title | escape }}</a>{% else %}<a href="{{ routes.all_products_collection_url }}">{{ 'general.shop' | t }}</a>{% endif %} /
+    <span aria-current="page">{{ product.title | escape }}</span>
+  </nav>
+
+  <div class="tb-product-layout">
+    <div class="tb-gallery">
+      <div class="tb-gallery-main">
+        {%- if main_media -%}
+          {%- if current.compare_at_price > current.price -%}<span class="tb-badge tb-badge-sale" data-sale-badge>{{ 'products.sale' | t }}</span>{%- else -%}<span class="tb-badge tb-badge-sale" data-sale-badge hidden>{{ 'products.sale' | t }}</span>{%- endif -%}
+          {{ main_media.preview_image | image_url: width: 1400 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200, 1400', sizes: '(max-width: 900px) 100vw, 55vw', class: 'tb-main-photo', alt: main_media.alt | default: product.title }}
+        {%- else -%}
+          <div class="tb-image-placeholder">{{ 'products.photo_placeholder' | t }}</div>
+        {%- endif -%}
+      </div>
+      {%- assign image_count = 0 -%}
+      {%- for media in product.media -%}{%- if media.media_type == 'image' -%}{%- assign image_count = image_count | plus: 1 -%}{%- endif -%}{%- endfor -%}
+      {%- if image_count > 1 -%}
+        <div class="tb-thumbs">
+          {%- for media in product.media -%}
+            {%- if media.media_type == 'image' -%}
+              <button type="button" class="tb-thumb" data-gallery-thumb data-media-id="{{ media.id }}" data-image="{{ media.preview_image | image_url: width: 1400 }}" data-srcset="{{ media.preview_image | image_url: width: 600 }} 600w, {{ media.preview_image | image_url: width: 900 }} 900w, {{ media.preview_image | image_url: width: 1400 }} 1400w" data-alt="{{ media.alt | default: product.title | escape }}" aria-label="{{ 'products.show_photo' | t: number: forloop.index }}"{% if media.id == main_media.id %} aria-current="true"{% endif %}>
+                {{ media.preview_image | image_url: width: 220 | image_tag: loading: 'lazy', alt: '' }}
+              </button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="tb-product-info">
+      <h1>{{ product.title | escape }}</h1>
+      {%- liquid
+        assign product_rating = product.metafields.reviews.rating.value
+        assign product_rating_count = product.metafields.reviews.rating_count.value | default: 0
+      -%}
+      {%- if product_rating and product_rating_count > 0 -%}
+        {% render 'rating-stars', rating: product_rating.rating, max: product_rating.scale_max, count: product_rating_count, link: '#reviews' %}
+      {%- endif -%}
+      <div class="tb-price" data-price-wrap>
+        <span data-price>{{ current.price | money }}</span>
+        <del data-compare-price{% unless current.compare_at_price > current.price %} hidden{% endunless %}>{% if current.compare_at_price > current.price %}{{ current.compare_at_price | money }}{% endif %}</del>
+      </div>
+      {%- if section.settings.price_note != blank -%}<p class="tb-muted">{{ section.settings.price_note | escape }}</p>{%- endif -%}
+      {%- if product.metafields.custom.short_description != blank -%}
+        <p class="tb-product-lead">{{ product.metafields.custom.short_description | escape }}</p>
+      {%- endif -%}
+
+      {%- form 'product', product, class: 'tb-product-form', id: 'tb-product-form', novalidate: 'novalidate' -%}
+        {%- unless product.has_only_default_variant -%}
+          <div class="tb-option-set" data-product-options>
+            {%- for option in product.options_with_values -%}
+              {%- assign option_name = option.name | downcase -%}
+              {%- assign is_colour = false -%}
+              {%- if option_name contains 'colour' or option_name contains 'color' -%}{%- assign is_colour = true -%}{%- endif -%}
+              <fieldset class="tb-option">
+                <legend>
+                  <span class="tb-option-name">{{ option.name | escape }}</span><span class="tb-option-current" data-option-current="{{ option.position }}">{{ option.selected_value | escape }}</span>
+                </legend>
+                {%- if size_guide != blank -%}
+                  {%- if option_name contains 'size' or option_name contains 'age' -%}
+                    <button type="button" class="tb-guide-link" data-open-size-guide aria-haspopup="dialog">{{ 'products.size_guide' | t }}</button>
+                  {%- endif -%}
+                {%- endif -%}
+                <div class="tb-option-values{% if is_colour %} is-swatches{% endif %}">
+                  {%- for value in option.values -%}
+                    {%- liquid
+                      assign value_name = value.name | default: value
+                      assign value_available = true
+                      if single_option
+                        assign value_available = false
+                        for v in product.variants
+                          if v.option1 == value_name and v.available
+                            assign value_available = true
+                            break
+                          endif
+                        endfor
+                      endif
+                    -%}
+                    {%- liquid
+                      assign swatch_style = ''
+                      if is_colour and value.swatch
+                        if value.swatch.image
+                          assign swatch_img = value.swatch.image | image_url: width: 96
+                          assign swatch_style = 'background-image:url(' | append: swatch_img | append: ')'
+                        elsif value.swatch.color
+                          assign swatch_style = 'background-color:' | append: value.swatch.color
+                        endif
+                      endif
+                    -%}
+                    <label class="tb-option-pill{% if swatch_style != blank %} is-swatch{% endif %}{% unless value_available %} is-unavailable{% endunless %}"{% if swatch_style != blank %} title="{{ value_name | escape }}"{% endif %}>
+                      <input type="radio" name="option-{{ option.position }}" value="{{ value_name | escape }}" data-option-position="{{ option.position }}" form="tb-options-dummy"{% if option.selected_value == value_name %} checked{% endif %}{% unless value_available %} disabled{% endunless %}>
+                      {%- if swatch_style != blank -%}<span style="{{ swatch_style }}"><span class="visually-hidden">{{ value_name | escape }}</span></span>{%- else -%}<span>{{ value_name | escape }}</span>{%- endif -%}<small class="visually-hidden" data-soldout-sr>{% unless value_available %}, {{ 'products.sold_out_label' | t }}{% endunless %}</small>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+            {%- endfor -%}
+          </div>
+        {%- endunless -%}
+
+        <label class="visually-hidden" for="tb-variant">{{ 'products.variant' | t }}</label>
+        <select id="tb-variant" name="id" data-variant-select class="tb-variant-fallback{% if product.has_only_default_variant %} is-single{% endif %}">
+          {%- for variant in product.variants -%}
+            <option value="{{ variant.id }}"{% if variant == current %} selected{% endif %}{% unless variant.available %} disabled{% endunless %}>{{ variant.title | escape }} – {{ variant.price | money }}{% unless variant.available %} ({{ 'products.sold_out' | t }}){% endunless %}</option>
+          {%- endfor -%}
+        </select>
+
+        <div class="tb-buy-row">
+          <div class="tb-quantity">
+            <button type="button" aria-label="{{ 'products.decrease_quantity' | t }}" data-qty-minus>−</button>
+            <input type="number" aria-label="{{ 'products.quantity' | t }}" min="1" max="10" name="quantity" value="1" inputmode="numeric" data-qty>
+            <button type="button" aria-label="{{ 'products.increase_quantity' | t }}" data-qty-plus>+</button>
+          </div>
+          <button class="button tb-add-button" type="submit" name="add" data-add-button{% unless current.available %} disabled{% endunless %}>
+            {%- if current.available -%}{{ 'products.add_to_bag' | t }}{%- else -%}{{ 'products.sold_out' | t }}{%- endif -%}
+          </button>
+        </div>
+        {%- liquid
+          assign low_count = 0
+          if settings.low_stock_product and current.available and current.inventory_management == 'shopify' and current.inventory_policy == 'deny' and current.inventory_quantity > 0 and current.inventory_quantity <= settings.low_stock_threshold
+            assign low_count = current.inventory_quantity
+          endif
+        -%}
+        <p class="tb-low-stock" data-low-stock{% if low_count == 0 %} hidden{% endif %}>
+          {%- if low_count > 0 -%}
+            {%- if product.has_only_default_variant -%}
+              {{ 'products.low_stock' | t: count: low_count }}
+            {%- else -%}
+              {{ 'products.low_stock_variant' | t: count: low_count, variant: current.title }}
+            {%- endif -%}
+          {%- endif -%}
+        </p>
+        <p class="tb-variant-note" data-variant-note role="status" hidden></p>
+      {%- endform -%}
+
+      {%- if wa_url != blank and section.settings.show_whatsapp -%}
+        <a class="tb-secondary-button" href="{{ wa_url }}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}{{ 'products.ask_whatsapp' | t }}</a>
+      {%- endif -%}
+      {%- if request.design_mode and wa_url == blank and section.settings.show_whatsapp -%}
+        <p class="tb-editor-hint">{{ 'products.whatsapp_editor_hint' | t }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.delivery_text != blank or section.settings.payment_text != blank or section.settings.exchange_text != blank -%}
+        <div class="tb-delivery-notes">
+          {%- if section.settings.delivery_text != blank -%}<p><strong>{{ 'products.delivery' | t }}</strong><br>{{ section.settings.delivery_text | escape }}</p>{%- endif -%}
+          {%- if section.settings.payment_text != blank -%}<p><strong>{{ 'products.payment' | t }}</strong><br>{{ section.settings.payment_text | escape }}</p>{%- endif -%}
+          {%- if section.settings.exchange_text != blank -%}<p><strong>{{ 'products.exchanges' | t }}</strong><br>{{ section.settings.exchange_text | escape }}</p>{%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="tb-accordions">
+        {%- if product.description != blank -%}
+          <details open><summary>{{ 'products.details' | t }}</summary><div class="rte">{{ product.description }}</div></details>
+        {%- endif -%}
+        {%- if size_guide != blank -%}
+          <details><summary>{{ 'products.size_fit' | t }}</summary><div class="rte">{{ size_guide }}</div></details>
+        {%- endif -%}
+        {%- if care != blank -%}
+          <details><summary>{{ 'products.care' | t }}</summary><div class="rte">{{ care }}</div></details>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-variants-json>
+    [
+      {%- for v in product.variants -%}
+        {
+          "id": {{ v.id }},
+          "options": {{ v.options | json }},
+          "available": {{ v.available | json }},
+          "price": {{ v.price | money | json }},
+          "compare": {% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | json }}{% else %}null{% endif %},
+          "media": {% if v.featured_media %}{{ v.featured_media.id }}{% else %}null{% endif %},
+          "low": {% if settings.low_stock_product and v.available and v.inventory_management == 'shopify' and v.inventory_policy == 'deny' and v.inventory_quantity > 0 and v.inventory_quantity <= settings.low_stock_threshold %}{{ v.inventory_quantity }}{% else %}null{% endif %}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  </script>
+  <script type="application/json" data-product-strings>
+    {%- assign str_value = 'products.sold_out_value' | t: value: '__V__' -%}
+    {%- assign str_in = 'products.sold_out_in' | t: value: '__V__', others: '__O__' -%}
+    {%- assign str_avail = 'products.available_in' | t: list: '__L__' -%}
+    {%- assign str_low_one = 'products.low_stock.one' | t: count: '__N__' -%}
+    {%- assign str_low_other = 'products.low_stock.other' | t: count: '__N__' -%}
+    {%- assign str_lowv_one = 'products.low_stock_variant.one' | t: count: '__N__', variant: '__V__' -%}
+    {%- assign str_lowv_other = 'products.low_stock_variant.other' | t: count: '__N__', variant: '__V__' -%}
+    {
+      "add": {{ 'products.add_to_bag' | t | json }},
+      "soldOut": {{ 'products.sold_out' | t | json }},
+      "unavailable": {{ 'products.unavailable' | t | json }},
+      "soldOutLabel": {{ 'products.sold_out_label' | t | json }},
+      "soldOutValue": {{ str_value | json }},
+      "soldOutIn": {{ str_in | json }},
+      "availableIn": {{ str_avail | json }},
+      "unavailableCombo": {{ 'products.unavailable_combo' | t | json }},
+      "lowOne": {{ str_low_one | json }},
+      "lowOther": {{ str_low_other | json }},
+      "lowVariantOne": {{ str_lowv_one | json }},
+      "lowVariantOther": {{ str_lowv_other | json }},
+      "singleVariant": {{ product.has_only_default_variant | json }}
+    }
+  </script>
+
+  <div class="tb-sticky-buy" data-sticky-buy aria-hidden="true">
+    <div class="tb-sticky-info">
+      <strong>{{ product.title | escape }}</strong>
+      <span><span data-sticky-price>{{ current.price | money }}</span>{% unless product.has_only_default_variant %} · <span data-sticky-variant>{{ current.title | escape }}</span>{% endunless %}</span>
+    </div>
+    <button type="button" class="button" data-sticky-add tabindex="-1"{% unless current.available %} disabled{% endunless %}>{% if current.available %}{{ 'products.add_to_bag' | t }}{% else %}{{ 'products.sold_out' | t }}{% endif %}</button>
+  </div>
+
+
+  {%- comment -%}
+    Floating video: uses the first video uploaded to the product's media in Shopify.
+    The small bubble plays a light, silent version; tapping it opens the full video with sound.
+  {%- endcomment -%}
+  {%- liquid
+    assign float_video = nil
+    for media in product.media
+      if media.media_type == 'video'
+        assign float_video = media
+        break
+      endif
+    endfor
+  -%}
+  {%- if section.settings.floating_video and float_video -%}
+    {%- liquid
+      assign small_src = nil
+      assign large_src = nil
+      assign hls_src = nil
+      for source in float_video.sources
+        if source.format == 'm3u8'
+          assign hls_src = source
+        elsif source.format == 'mp4'
+          if small_src == nil or source.height < small_src.height
+            assign small_src = source
+          endif
+          if source.height <= 1080
+            if large_src == nil or source.height > large_src.height
+              assign large_src = source
+            endif
+          endif
+        endif
+      endfor
+      if large_src == nil
+        assign large_src = small_src
+      endif
+      assign video_title = 'products.video.title' | t: product: product.title
+      assign poster = float_video.preview_image | default: product.featured_media.preview_image
+    -%}
+    {%- if small_src -%}
+      <div class="tb-float-video is-{{ section.settings.video_position }}" data-float-video data-small="{{ small_src.url }}" hidden>
+        <button type="button" class="tb-float-video-open" data-float-open aria-label="{{ 'products.video.open' | t: product: product.title }}" aria-haspopup="dialog">
+          {%- if poster -%}{{ poster | image_url: width: 360 | image_tag: loading: 'lazy', alt: '', class: 'tb-float-poster' }}{%- endif -%}
+          <video class="tb-float-clip" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+          <span class="tb-float-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+        </button>
+        <button type="button" class="tb-float-video-close" data-float-close aria-label="{{ 'products.video.hide' | t }}">{% render 'icon', name: 'close' %}</button>
+      </div>
+
+      <dialog class="tb-video-dialog" data-float-dialog aria-label="{{ video_title | escape }}">
+        <button type="button" class="tb-video-dialog-close" data-float-dialog-close aria-label="{{ 'products.video.close' | t }}">{% render 'icon', name: 'close' %}</button>
+        <video class="tb-video-full" controls playsinline preload="none"{% if poster %} poster="{{ poster | image_url: width: 1080 }}"{% endif %} data-float-full data-mp4="{{ large_src.url }}"{% if hls_src %} data-hls="{{ hls_src.url }}"{% endif %}></video>
+      </dialog>
+    {%- endif -%}
+  {%- endif -%}
+  {%- if size_guide != blank -%}
+    <dialog class="tb-dialog" data-size-guide aria-labelledby="SizeGuideTitle-{{ section.id }}">
+      <div class="tb-dialog-head">
+        <h2 id="SizeGuideTitle-{{ section.id }}">{{ 'products.size_guide' | t }}</h2>
+        <button type="button" data-close-dialog aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+      </div>
+      <div class="rte">{{ size_guide }}</div>
+    </dialog>
+  {%- endif -%}
+</section>
+
+<script type="application/ld+json">{{ product | structured_data }}</script>
+
+{% schema %}
+{
+  "name": "Product details",
+  "settings": [
+    {
+      "type": "text",
+      "id": "price_note",
+      "label": "Text below price",
+      "default": "Taxes and delivery calculated at checkout."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_whatsapp",
+      "label": "Show “Ask about this on WhatsApp”",
+      "info": "Uses the number in Theme settings › Contact details. The message includes the product name and link.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Shop information"
+    },
+    {
+      "type": "paragraph",
+      "content": "Only fill these in once confirmed. Empty fields are hidden."
+    },
+    {
+      "type": "text",
+      "id": "delivery_text",
+      "label": "Delivery note"
+    },
+    {
+      "type": "text",
+      "id": "payment_text",
+      "label": "Payment note"
+    },
+    {
+      "type": "text",
+      "id": "exchange_text",
+      "label": "Exchange note"
+    },
+    {
+      "type": "header",
+      "content": "Default guides"
+    },
+    {
+      "type": "paragraph",
+      "content": "Used when a product has no custom.size_guide or custom.care metafield of its own."
+    },
+    {
+      "type": "textarea",
+      "id": "sizing_copy",
+      "label": "Size and fit guide"
+    },
+    {
+      "type": "textarea",
+      "id": "care_copy",
+      "label": "Care instructions"
+    },
+    {
+      "type": "header",
+      "content": "Floating video"
+    },
+    {
+      "type": "checkbox",
+      "id": "floating_video",
+      "label": "Show floating product video",
+      "info": "Uses the first video in the product’s media. Products without a video show nothing.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "video_position",
+      "label": "Video position",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "Bottom left"
+        },
+        {
+          "value": "right",
+          "label": "Bottom right"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
