@@ -166,11 +166,87 @@
         <p class="tb-editor-hint">{{ 'products.whatsapp_editor_hint' | t }}</p>
       {%- endif -%}
 
-      {%- if section.settings.delivery_text != blank or section.settings.payment_text != blank or section.settings.exchange_text != blank -%}
+      {%- liquid
+        assign ship_min = section.settings.ship_min_days
+        assign ship_max = section.settings.ship_max_days
+        if ship_max < ship_min
+          assign ship_max = ship_min
+        endif
+        assign arrival_label = ''
+        if section.settings.show_arrival
+          assign cursor = 'now' | date: '%s' | plus: 0
+          assign counted = 0
+          for i in (1..60)
+            if counted >= ship_min
+              break
+            endif
+            assign cursor = cursor | plus: 86400
+            assign dow = cursor | date: '%w' | plus: 0
+            unless dow == 0 or dow == 6
+              assign counted = counted | plus: 1
+            endunless
+          endfor
+          assign arrive_from = cursor | date: '%a %-d %b'
+          for i in (1..60)
+            if counted >= ship_max
+              break
+            endif
+            assign cursor = cursor | plus: 86400
+            assign dow = cursor | date: '%w' | plus: 0
+            unless dow == 0 or dow == 6
+              assign counted = counted | plus: 1
+            endunless
+          endfor
+          assign arrive_to = cursor | date: '%a %-d %b'
+          if arrive_from == arrive_to
+            assign arrival_label = 'products.arrives_on' | t: date: arrive_from
+          else
+            assign arrival_label = 'products.arrives' | t: from: arrive_from, to: arrive_to
+          endif
+        endif
+        assign delivery_title = arrival_label | default: section.settings.delivery_title
+        assign has_delivery = false
+        if delivery_title != blank or section.settings.delivery_text != blank
+          assign has_delivery = true
+        endif
+        assign has_payment = false
+        if section.settings.payment_title != blank or section.settings.payment_text != blank
+          assign has_payment = true
+        endif
+        assign has_exchange = false
+        if section.settings.exchange_title != blank or section.settings.exchange_text != blank
+          assign has_exchange = true
+        endif
+      -%}
+      {%- if has_delivery or has_payment or has_exchange -%}
         <div class="tb-delivery-notes">
-          {%- if section.settings.delivery_text != blank -%}<p><strong>{{ 'products.delivery' | t }}</strong><br>{{ section.settings.delivery_text | escape }}</p>{%- endif -%}
-          {%- if section.settings.payment_text != blank -%}<p><strong>{{ 'products.payment' | t }}</strong><br>{{ section.settings.payment_text | escape }}</p>{%- endif -%}
-          {%- if section.settings.exchange_text != blank -%}<p><strong>{{ 'products.exchanges' | t }}</strong><br>{{ section.settings.exchange_text | escape }}</p>{%- endif -%}
+          {%- if has_delivery -%}
+            <div class="tb-note">
+              {% render 'icon', name: 'truck' %}
+              <div>
+                {%- if delivery_title != blank -%}<strong>{{ delivery_title }}</strong>{%- endif -%}
+                {%- if section.settings.delivery_text != blank -%}<span>{{ section.settings.delivery_text | escape }}</span>{%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+          {%- if has_payment -%}
+            <div class="tb-note">
+              {% render 'icon', name: 'cash' %}
+              <div>
+                {%- if section.settings.payment_title != blank -%}<strong>{{ section.settings.payment_title | escape }}</strong>{%- endif -%}
+                {%- if section.settings.payment_text != blank -%}<span>{{ section.settings.payment_text | escape }}</span>{%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+          {%- if has_exchange -%}
+            <div class="tb-note">
+              {% render 'icon', name: 'exchange' %}
+              <div>
+                {%- if section.settings.exchange_title != blank -%}<strong>{{ section.settings.exchange_title | escape }}</strong>{%- endif -%}
+                {%- if section.settings.exchange_text != blank -%}<span>{{ section.settings.exchange_text | escape }}</span>{%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
         </div>
       {%- endif -%}
 
@@ -327,22 +403,69 @@
     },
     {
       "type": "paragraph",
-      "content": "Only fill these in once confirmed. Empty fields are hidden."
+      "content": "Shown in the panel under the buy buttons. Clear a field to hide that line; clear both lines of a row to hide the row."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrival",
+      "label": "Show estimated arrival dates",
+      "info": "Counts working days from today and skips weekends. Turn off to show your own delivery heading instead.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "ship_min_days",
+      "label": "Fastest arrival (working days)",
+      "min": 1,
+      "max": 14,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "ship_max_days",
+      "label": "Slowest arrival (working days)",
+      "min": 1,
+      "max": 21,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "delivery_title",
+      "label": "Delivery heading",
+      "info": "Used only when arrival dates are turned off.",
+      "default": "Delivery across Pakistan"
     },
     {
       "type": "text",
       "id": "delivery_text",
-      "label": "Delivery note"
+      "label": "Delivery note",
+      "default": "Delivery across Pakistan in 3–5 working days."
+    },
+    {
+      "type": "text",
+      "id": "payment_title",
+      "label": "Payment heading",
+      "default": "Cash on delivery"
     },
     {
       "type": "text",
       "id": "payment_text",
-      "label": "Payment note"
+      "label": "Payment note",
+      "default": "Pay when your parcel arrives."
+    },
+    {
+      "type": "text",
+      "id": "exchange_title",
+      "label": "Exchange heading",
+      "default": "Free size exchange"
     },
     {
       "type": "text",
       "id": "exchange_text",
-      "label": "Exchange note"
+      "label": "Exchange note",
+      "default": "Wrong size? Exchange within 7 days."
     },
     {
       "type": "header",

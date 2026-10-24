@@ -63,7 +63,9 @@
       "one": "Only {{ count }} left in {{ variant }}",
       "other": "Only {{ count }} left in {{ variant }}"
     },
-    "few_left": "Few left"
+    "few_left": "Few left",
+    "arrives": "Arrives {{ from }} to {{ to }}",
+    "arrives_on": "Arrives {{ date }}"
   },
   "collections": {
     "pieces": {

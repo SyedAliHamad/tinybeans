@@ -1,12 +1,16 @@
 {%- comment -%}
   Renders an inline SVG icon. Usage: {% render 'icon', name: 'truck' %}
-  Icons: heart, truck, camera, message, whatsapp, instagram, facebook, email, menu, close, bag
+  Icons: heart, truck, cash, exchange, camera, message, whatsapp, instagram, facebook, email, menu, close, bag
 {%- endcomment -%}
 {%- case name -%}
   {%- when 'heart' -%}
     <svg class="icon icon-heart" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.1A4.4 4.4 0 0 1 12 7.2a4.4 4.4 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20Z"/></svg>
   {%- when 'truck' -%}
     <svg class="icon icon-truck" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5h12v9.5H2zM14 9.5h4.2l3.3 3.6v2.9H14z"/><circle cx="6" cy="17.5" r="1.9"/><circle cx="17.5" cy="17.5" r="1.9"/></svg>
+  {%- when 'cash' -%}
+    <svg class="icon icon-cash" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="1.8"/><circle cx="9.5" cy="12" r="2.3"/><path d="M15.5 12h3"/></svg>
+  {%- when 'exchange' -%}
+    <svg class="icon icon-exchange" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5h15l-3.4-3.4"/><path d="M20.5 15.5h-15l3.4 3.4"/></svg>
   {%- when 'camera' -%}
     <svg class="icon icon-camera" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h4l1.6-2.2h6.8L17 8h4v11H3z"/><circle cx="12" cy="13.2" r="3.6"/></svg>
   {%- when 'message' -%}
