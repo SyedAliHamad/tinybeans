@@ -103,6 +103,7 @@
         "girls",
         "boys"
       ],
+      "disabled": true,
       "settings": {
         "eyebrow": "",
         "heading": "Something for every little one"
