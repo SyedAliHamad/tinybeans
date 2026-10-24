@@ -1,7 +1,18 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "brand_olive": "#6c6e53",
     "brand_cream": "#ede1d1",
-    "instagram_url": "https://www.instagram.com/tinybeans.pk/"
+    "whatsapp_number": "+923714202012",
+    "instagram_url": "https://www.instagram.com/tinybeans.pk/",
+    "content_for_index": []
   }
 }
