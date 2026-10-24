@@ -15,7 +15,7 @@
         {% render 'product-card', product: product, collection: featured_collection %}
       {%- endfor -%}
     {%- else -%}
-      {%- for i in (1..4) -%}
+      {%- for i in (1..section.settings.limit) -%}
         <article class="tb-product-card">
           <div class="tb-product-image"><span class="tb-card-placeholder">{{ 'products.photo_placeholder' | t }}</span></div>
           <p class="tb-product-name">{{ 'products.photo_placeholder' | t }}</p>

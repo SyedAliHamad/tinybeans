@@ -370,3 +370,7 @@ a.tb-rating-link{text-decoration:underline;text-underline-offset:3px;padding:8px
 .tb-low-stock{display:flex;align-items:center;gap:8px;margin:12px 0 0;font-size:14px;font-weight:600;color:var(--deep)}
 .tb-low-stock:before{content:'';width:8px;height:8px;border-radius:50%;background:#c27a4a;flex:none}
 .tb-few-left{margin:4px 0 0;font-size:13px;font-weight:600;color:#9a5a32}
+
+/* ===== V8: featured products two-row grid ===== */
+.product-grid{row-gap:40px}
+@media(max-width:650px){.product-grid{row-gap:28px;column-gap:12px}}
