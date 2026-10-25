@@ -1,0 +1,221 @@
+{%- comment -%}
+  Tiny Beans — Order confirmation
+
+  Paste into Shopify admin: Settings › Notifications › Order confirmation › Edit code.
+  Shopify stores these templates in the admin, NOT in the theme, so this file is a
+  versioned copy only. Editing it changes nothing on its own.
+
+  Two values are hardcoded because notification templates cannot read theme
+  settings. Keep them in step with the storefront:
+    - WhatsApp number        +92 371 4202012  (Theme settings › Contact details)
+    - Delivery window        3-5 working days (Product information › Shop information)
+
+  Headings use Georgia, not Cormorant Garamond: email clients will not load the
+  theme's self-hosted woff2, and Georgia is the closest face that ships everywhere.
+{%- endcomment -%}
+{%- comment -%} Encode the message first, then append it. Encoding the whole URL would mangle the scheme and the query separator. {%- endcomment -%}
+{%- capture wa_text -%}Hi Tiny Beans, this is about order {{ name }}. The little one is {%- endcapture -%}
+{%- assign wa_msg = wa_text | strip | url_encode -%}
+{%- assign wa_link = 'https://wa.me/923714202012?text=' | append: wa_msg -%}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ shop.name }}</title>
+</head>
+<body style="margin:0; padding:0; width:100%; background-color:#f8f5f0;">
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f8f5f0;">
+<tr>
+<td align="center" style="padding:26px 12px 40px;">
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:100%;">
+
+  <!-- wordmark -->
+  <tr>
+    <td align="center" style="padding:6px 0 24px;">
+      <span style="font-family:Georgia,'Times New Roman',serif; font-size:40px; font-weight:400; color:#6c6e53;">Tiny Beans</span>
+    </td>
+  </tr>
+
+  <!-- opening -->
+  <tr>
+    <td style="background-color:#ffffff; padding:34px 30px 28px;">
+      <p style="margin:0 0 8px; font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:bold; letter-spacing:0.08em; text-transform:uppercase; color:#6c6e53;">Order {{ name }}</p>
+      <h1 style="margin:0 0 14px; font-family:Georgia,'Times New Roman',serif; font-size:31px; line-height:1.15; font-weight:400; color:#34362d;">Thank you, {{ customer.first_name | default: 'friend' }}.</h1>
+      <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.7; color:#5f5a50;">
+        Your order is in and we are getting it ready by hand. Everything you need is below.
+      </p>
+    </td>
+  </tr>
+
+  <!-- the reassuring bit, kept high on purpose -->
+  <tr>
+    <td style="background-color:#ede1d1; padding:4px 30px 6px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td style="padding:18px 0 14px; border-bottom:1px solid #ddd0bc;">
+            <p style="margin:0 0 3px; font-family:Arial,Helvetica,sans-serif; font-size:15px; font-weight:bold; color:#34362d;">Arrives in 3&ndash;5 working days</p>
+            <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.6; color:#5f5a50;">Delivered across Pakistan. We will message you when it ships.</p>
+          </td>
+        </tr>
+        {%- if financial_status != 'paid' -%}
+        <tr>
+          <td style="padding:14px 0; border-bottom:1px solid #ddd0bc;">
+            <p style="margin:0 0 3px; font-family:Arial,Helvetica,sans-serif; font-size:15px; font-weight:bold; color:#34362d;">Keep {{ total_price | money }} ready for the rider</p>
+            <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.6; color:#5f5a50;">Cash on delivery. Nothing to pay until the parcel is in your hands.</p>
+          </td>
+        </tr>
+        {%- endif -%}
+        <tr>
+          <td style="padding:14px 0 18px;">
+            <p style="margin:0 0 3px; font-family:Arial,Helvetica,sans-serif; font-size:15px; font-weight:bold; color:#34362d;">Questions? Message us on WhatsApp</p>
+            <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.6; color:#5f5a50;">
+              <a href="{{ wa_link }}" style="color:#6c6e53; text-decoration:underline;">+92 371 4202012</a> &mdash; a real person, not a bot.
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- what they ordered -->
+  <tr>
+    <td style="background-color:#ffffff; padding:30px 30px 10px;">
+      <h2 style="margin:0 0 18px; font-family:Georgia,'Times New Roman',serif; font-size:22px; font-weight:400; color:#34362d;">What is coming</h2>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        {%- for line in line_items -%}
+        <tr>
+          <td width="68" valign="top" style="padding:0 14px 18px 0;">
+            {%- if line.image -%}
+              <img src="{{ line.image | img_url: '200x200' }}" alt="" width="68" height="90" style="display:block; width:68px; height:90px; border:0; background-color:#e2dacd;">
+            {%- else -%}
+              <div style="width:68px; height:90px; background-color:#e2dacd;"></div>
+            {%- endif -%}
+          </td>
+          <td valign="top" style="padding:0 0 18px;">
+            <p style="margin:0 0 3px; font-family:Arial,Helvetica,sans-serif; font-size:15px; font-weight:bold; color:#34362d;">{{ line.title }}</p>
+            {%- if line.variant.title and line.variant.title != 'Default Title' -%}
+              <p style="margin:0 0 3px; font-family:Arial,Helvetica,sans-serif; font-size:13px; color:#6c665c;">{{ line.variant.title }}</p>
+            {%- endif -%}
+            <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:13px; color:#6c665c;">Qty {{ line.quantity }}</p>
+          </td>
+          <td valign="top" align="right" style="padding:0 0 18px;">
+            <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:15px; font-weight:bold; color:#34362d;">{{ line.final_line_price | money }}</p>
+          </td>
+        </tr>
+        {%- endfor -%}
+      </table>
+    </td>
+  </tr>
+
+  <!-- totals -->
+  <tr>
+    <td style="background-color:#ffffff; padding:0 30px 30px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #e2dcd2;">
+        <tr>
+          <td style="padding:16px 0 4px; font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#5f5a50;">Subtotal</td>
+          <td align="right" style="padding:16px 0 4px; font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#5f5a50;">{{ subtotal_price | money }}</td>
+        </tr>
+        {%- if total_discounts > 0 -%}
+        <tr>
+          <td style="padding:4px 0; font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#5f5a50;">Discount</td>
+          <td align="right" style="padding:4px 0; font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#5f5a50;">&minus;{{ total_discounts | money }}</td>
+        </tr>
+        {%- endif -%}
+        <tr>
+          <td style="padding:4px 0; font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#5f5a50;">Delivery</td>
+          <td align="right" style="padding:4px 0; font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#5f5a50;">{{ shipping_price | money }}</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 0 0; border-top:1px solid #e2dcd2; font-family:Arial,Helvetica,sans-serif; font-size:16px; font-weight:bold; color:#34362d;">Total</td>
+          <td align="right" style="padding:12px 0 0; border-top:1px solid #e2dcd2; font-family:Arial,Helvetica,sans-serif; font-size:16px; font-weight:bold; color:#34362d;">{{ total_price | money }}</td>
+        </tr>
+      </table>
+
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;">
+        <tr>
+          <td align="center" bgcolor="#6c6e53" style="background-color:#6c6e53;">
+            <a href="{{ order_status_url }}" style="display:inline-block; padding:15px 30px; font-family:Arial,Helvetica,sans-serif; font-size:14px; font-weight:bold; color:#ffffff; text-decoration:none;">Track this order</a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- delivering to -->
+  <tr>
+    <td style="background-color:#ffffff; padding:0 30px 30px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #e2dcd2;">
+        <tr>
+          <td style="padding:18px 0 0;">
+            <p style="margin:0 0 6px; font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:bold; letter-spacing:0.06em; text-transform:uppercase; color:#6c6e53;">Delivering to</p>
+            <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.7; color:#5f5a50;">
+              {{ shipping_address.name }}<br>
+              {{ shipping_address.address1 }}{% if shipping_address.address2 != blank %}, {{ shipping_address.address2 }}{% endif %}<br>
+              {{ shipping_address.city }}{% if shipping_address.province != blank %}, {{ shipping_address.province }}{% endif %}<br>
+              {{ shipping_address.phone }}
+            </p>
+            <p style="margin:10px 0 0; font-family:Arial,Helvetica,sans-serif; font-size:13px; color:#6c665c;">
+              Wrong address? <a href="{{ wa_link }}" style="color:#6c6e53;">Tell us on WhatsApp</a> before it ships and we will fix it.
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- the belonging bit, kept short and reciprocal -->
+  <tr>
+    <td style="background-color:#6c6e53; padding:32px 30px;">
+      <h2 style="margin:0 0 12px; font-family:Georgia,'Times New Roman',serif; font-size:26px; line-height:1.2; font-weight:400; color:#ffffff;">One small thing</h2>
+      <p style="margin:0 0 16px; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.75; color:#eee9dd;">
+        Little ones grow out of things startlingly fast. Tell us how old yours is and we will keep it in mind, so next time we can point you straight to the right size instead of guessing.
+      </p>
+      <p style="margin:0 0 20px; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.75; color:#eee9dd;">
+        And when the parcel arrives, we would genuinely love to see it worn. Send us a photo if you are happy to &mdash; it makes our week.
+      </p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td align="center" bgcolor="#f8f5f0" style="background-color:#f8f5f0;">
+            <a href="{{ wa_link }}" style="display:inline-block; padding:14px 28px; font-family:Arial,Helvetica,sans-serif; font-size:14px; font-weight:bold; color:#34362d; text-decoration:none;">Message us on WhatsApp</a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- sign off -->
+  <tr>
+    <td style="background-color:#ffffff; padding:30px;">
+      <p style="margin:0 0 4px; font-family:Georgia,'Times New Roman',serif; font-size:19px; color:#34362d;">Thank you for choosing us.</p>
+      <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.7; color:#5f5a50;">
+        Syed<br>
+        <span style="color:#6c665c;">Tiny Beans</span>
+      </p>
+    </td>
+  </tr>
+
+  <!-- footer -->
+  <tr>
+    <td align="center" style="padding:26px 20px 0;">
+      <p style="margin:0 0 8px; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:1.7; color:#8a8378;">
+        Questions about this order? Reply to this email or message
+        <a href="{{ wa_link }}" style="color:#8a8378;">+92 371 4202012</a>.
+      </p>
+      <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:12px; color:#8a8378;">
+        {{ shop.name }} &middot; <a href="{{ shop.url }}" style="color:#8a8378;">{{ shop.domain }}</a>
+      </p>
+    </td>
+  </tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>

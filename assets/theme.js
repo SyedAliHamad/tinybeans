@@ -583,10 +583,23 @@
     dlg.querySelectorAll('[data-credit-close]').forEach((b) => b.addEventListener('click', close));
     dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
 
+    // Keep the page still behind the dialog, and put it back exactly as it was.
+    const prevOverflow = document.body.style.overflow;
+    const lock = () => { document.body.style.overflow = 'hidden'; };
+    const unlock = () => { document.body.style.overflow = prevOverflow; };
+    dlg.addEventListener('close', unlock);
+
     setTimeout(() => {
       try { localStorage.setItem('tb-welcome-credit-seen', '1'); } catch (e) {}
-      if (typeof dlg.showModal === 'function') dlg.showModal();
-      else dlg.setAttribute('open', '');
+      // showModal throws if the dialog is already open or detached; the open
+      // attribute is the non-modal fallback, which the CSS also positions fixed.
+      try {
+        if (typeof dlg.showModal === 'function') dlg.showModal();
+        else dlg.setAttribute('open', '');
+      } catch (e) {
+        dlg.setAttribute('open', '');
+      }
+      lock();
     }, 2500);
   }
   /* ---------- Start ---------- */
