@@ -189,6 +189,10 @@
     "promo_cta": "Create an account",
     "account": "Your account",
     "sign_in": "Sign in",
-    "editor_hint": "Nothing shows here because the offer is turned off in Theme settings › Welcome credit, or customer accounts are not enabled in Shopify settings. This message only shows in the theme editor."
+    "popup_eyebrow": "Welcome",
+    "popup_heading": "{{ amount }} store credit, on us",
+    "popup_body": "Create an account and it is ready to spend at checkout. One per customer.",
+    "popup_dismiss": "Maybe later",
+    "popup_close": "Close"
   }
 }

@@ -558,6 +558,37 @@
     form.querySelectorAll('input[name="updates[]"]').forEach((i) => i.addEventListener('change', submitSoon));
   }
 
+
+  /* ---------- Welcome credit popup ----------
+     Shown once per browser. Liquid has already decided whether this visitor
+     should see it at all: the dialog is only in the DOM for logged-out
+     visitors who have not claimed the credit. localStorage then stops it
+     reappearing on every page view.
+
+     Marked as seen when it opens, not when it closes, so navigating away
+     without dismissing still counts as having been shown. */
+  function initCreditPopup(root) {
+    const dlg = root.querySelector('[data-credit-dialog]');
+    if (!dlg || dlg.dataset.mounted) return;
+    dlg.dataset.mounted = '1';
+
+    let seen = false;
+    try { seen = localStorage.getItem('tb-welcome-credit-seen') === '1'; } catch (e) {}
+    if (seen) { dlg.remove(); return; }
+
+    // The theme editor reloads constantly; a dialog grabbing focus each time is unusable.
+    if (window.Shopify && window.Shopify.designMode) return;
+
+    const close = () => { if (dlg.open) dlg.close(); };
+    dlg.querySelectorAll('[data-credit-close]').forEach((b) => b.addEventListener('click', close));
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+
+    setTimeout(() => {
+      try { localStorage.setItem('tb-welcome-credit-seen', '1'); } catch (e) {}
+      if (typeof dlg.showModal === 'function') dlg.showModal();
+      else dlg.setAttribute('open', '');
+    }, 2500);
+  }
   /* ---------- Start ---------- */
   function init() {
     initMenu();
@@ -568,6 +599,7 @@
     initCardHover();
     initFilters();
     initCart();
+    initCreditPopup(document);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

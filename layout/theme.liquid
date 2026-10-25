@@ -30,5 +30,6 @@
   {% sections 'header-group' %}
   <main id="MainContent" tabindex="-1">{{ content_for_layout }}</main>
   {% sections 'footer-group' %}
+  {% render 'welcome-credit', context: 'popup' %}
 </body>
 </html>

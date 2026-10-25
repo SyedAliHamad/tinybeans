@@ -2,7 +2,7 @@
   Welcome store credit messaging. One place decides what a visitor is told.
 
   Usage: {% render 'welcome-credit', context: 'bar' %}
-  Contexts: bar (announcement), cart (above checkout), promo (home page section).
+  Contexts: bar (announcement), cart (above checkout), popup (one-time dialog).
 
   Renders nothing at all when there is nothing honest to say, so callers can
   capture the output and fall back to their own copy when it comes back blank.
@@ -67,20 +67,19 @@
           <p class="tb-credit-note is-positive">{{ 'welcome_credit.cart_balance' | t: amount: amount }}</p>
         {%- endif -%}
 
-      {%- when 'promo' -%}
-        <p class="tb-credit-line">
-          {%- if state == 'offer' -%}
-            {{ 'welcome_credit.offer' | t: amount: amount }}
-          {%- elsif state == 'balance' -%}
-            {{ 'welcome_credit.balance' | t: amount: amount }}
-          {%- else -%}
-            {{ 'welcome_credit.pending' | t: amount: amount }}
-          {%- endif -%}
-        </p>
+      {%- when 'popup' -%}
+        {%- comment -%} Only the offer state opens a dialog. Someone who already holds
+           credit, is waiting on it, or has spent it is never interrupted. {%- endcomment -%}
         {%- if state == 'offer' -%}
-          <a class="button" href="{{ routes.account_login_url }}">{{ 'welcome_credit.promo_cta' | t }}</a>
+          <dialog class="tb-credit-dialog" data-credit-dialog aria-labelledby="CreditDialogTitle">
+            <button type="button" class="tb-credit-dialog-close" data-credit-close aria-label="{{ 'welcome_credit.popup_close' | t }}">{% render 'icon', name: 'close' %}</button>
+            <p class="eyebrow olive">{{ 'welcome_credit.popup_eyebrow' | t }}</p>
+            <h2 id="CreditDialogTitle">{{ 'welcome_credit.popup_heading' | t: amount: amount }}</h2>
+            <p class="tb-credit-dialog-body">{{ 'welcome_credit.popup_body' | t }}</p>
+            <a class="button" href="{{ routes.account_login_url }}">{{ 'welcome_credit.promo_cta' | t }}</a>
+            <button type="button" class="tb-credit-dismiss" data-credit-close>{{ 'welcome_credit.popup_dismiss' | t }}</button>
+          </dialog>
         {%- endif -%}
-
     {%- endcase -%}
   {%- endunless -%}
 {%- endif -%}
