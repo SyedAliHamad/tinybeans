@@ -1,0 +1,102 @@
+{%- comment -%}
+  Cart drawer. Rendered once in the layout and refreshed through the Section
+  Rendering API (/?section_id=cart-drawer) after every cart change, so the
+  markup lives in Liquid rather than being rebuilt in JavaScript.
+
+  Without JS nothing here is reachable: the product form posts normally and the
+  bag icon is still a link to /cart, so the cart page remains the fallback.
+{%- endcomment -%}
+<div class="tb-drawer" data-cart-drawer hidden>
+  <div class="tb-drawer-scrim" data-drawer-close></div>
+
+  <aside class="tb-drawer-panel" role="dialog" aria-modal="true" aria-label="{{ 'cart.title' | t }}" tabindex="-1">
+
+    <header class="tb-drawer-head">
+      <h2>{{ 'cart.title' | t }} <span class="tb-drawer-count" data-count="{{ cart.item_count }}">({{ cart.item_count }})</span></h2>
+      <button type="button" class="tb-drawer-close" data-drawer-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </header>
+
+    {%- if cart.item_count == 0 -%}
+
+      <div class="tb-drawer-empty">
+        <p class="tb-drawer-empty-title">{{ 'cart.empty_title' | t }}</p>
+        <p>{{ 'cart.empty_text' | t }}</p>
+        <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+      </div>
+
+    {%- else -%}
+
+      <div class="tb-drawer-items">
+        {%- for item in cart.items -%}
+          {%- liquid
+            assign low = 0
+            if settings.low_stock_cards and item.variant.inventory_management == 'shopify' and item.variant.inventory_policy == 'deny' and item.variant.inventory_quantity > 0 and item.variant.inventory_quantity <= settings.low_stock_threshold
+              assign low = item.variant.inventory_quantity
+            endif
+          -%}
+          <div class="tb-drawer-item" data-line="{{ forloop.index }}">
+            <a class="tb-drawer-image" href="{{ item.url }}">
+              {%- if item.image -%}
+                {{ item.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: item.title | escape }}
+              {%- endif -%}
+            </a>
+
+            <div class="tb-drawer-detail">
+              <a class="tb-drawer-name" href="{{ item.url }}">{{ item.product.title }}</a>
+              {%- unless item.product.has_only_default_variant -%}
+                <p class="tb-drawer-variant">{{ item.variant.title }}</p>
+              {%- endunless -%}
+
+              <div class="tb-drawer-row">
+                <div class="tb-quantity tb-drawer-qty">
+                  <button type="button" data-qty-down aria-label="{{ 'products.decrease_quantity' | t }}">&minus;</button>
+                  <input type="number" inputmode="numeric" value="{{ item.quantity }}" min="0" data-qty-input aria-label="{{ 'cart.quantity_for' | t: title: item.title }}">
+                  <button type="button" data-qty-up aria-label="{{ 'products.increase_quantity' | t }}">+</button>
+                </div>
+                <strong class="tb-drawer-price">{{ item.final_line_price | money }}</strong>
+              </div>
+
+              {%- if low > 0 -%}
+                <p class="tb-few-left">{{ 'products.low_stock' | t: count: low }}</p>
+              {%- endif -%}
+
+              <button type="button" class="tb-drawer-remove" data-remove>{{ 'cart.remove' | t }}</button>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <footer class="tb-drawer-foot">
+        <div class="tb-drawer-line"><span>{{ 'cart.subtotal' | t }}</span><span>{{ cart.items_subtotal_price | money }}</span></div>
+        {%- for discount in cart.cart_level_discount_applications -%}
+          <div class="tb-drawer-line"><span>{{ 'cart.discount' | t }}: {{ discount.title | escape }}</span><span>&minus;{{ discount.total_allocated_amount | money }}</span></div>
+        {%- endfor -%}
+        <div class="tb-drawer-line"><span>{{ 'cart.delivery' | t }}</span><span>{{ 'cart.delivery_note' | t }}</span></div>
+        <div class="tb-drawer-line tb-drawer-total"><span>{{ 'cart.total' | t }}</span><strong>{{ cart.total_price | money }}</strong></div>
+
+        {% render 'welcome-credit', context: 'cart' %}
+
+        <form action="{{ routes.cart_url }}" method="post" novalidate>
+          <button type="submit" name="checkout" class="button tb-drawer-checkout">
+            {{ 'cart.checkout' | t }} &middot; {{ cart.total_price | money }}
+          </button>
+        </form>
+        <a class="tb-drawer-viewbag" href="{{ routes.cart_url }}">{{ 'cart.view_bag' | t }}</a>
+      </footer>
+
+    {%- endif -%}
+
+  </aside>
+</div>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Slides in when something is added to the bag, and when the bag icon is tapped. Covers the whole screen on phones. With JavaScript unavailable the cart page is used instead."
+    }
+  ]
+}
+{% endschema %}

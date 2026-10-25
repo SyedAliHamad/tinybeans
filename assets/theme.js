@@ -602,6 +602,134 @@
       lock();
     }, 2500);
   }
+
+  /* ---------- Cart drawer ----------
+     The panel's markup comes from the cart-drawer section and is re-fetched
+     through the Section Rendering API after every change, so quantities,
+     prices and discounts stay Liquid's job rather than being recomputed here.
+
+     Handlers are delegated from document because refreshing replaces the
+     drawer's contents wholesale. */
+  function initCartDrawer() {
+    const drawer = document.querySelector('[data-cart-drawer]');
+    if (!drawer || drawer.dataset.mounted) return;
+    drawer.dataset.mounted = '1';
+
+    let lastFocus = null;
+    let busy = false;
+
+    const open = () => {
+      lastFocus = document.activeElement;
+      drawer.hidden = false;
+      requestAnimationFrame(() => drawer.classList.add('is-open'));
+      document.body.style.overflow = 'hidden';
+      const panel = drawer.querySelector('.tb-drawer-panel');
+      if (panel) panel.focus();
+    };
+    const close = () => {
+      drawer.classList.remove('is-open');
+      document.body.style.overflow = '';
+      const done = () => { drawer.hidden = true; };
+      if (reduceMotion) done(); else setTimeout(done, 280);
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    };
+    window.tbCartDrawer = { open, close };
+
+    const setCount = () => {
+      const el = drawer.querySelector('[data-count]');
+      if (!el) return;
+      const n = parseInt(el.dataset.count, 10) || 0;
+      document.querySelectorAll('.bag-icon').forEach((bag) => {
+        let badge = bag.querySelector('small');
+        if (n > 0) {
+          if (!badge) { badge = document.createElement('small'); badge.setAttribute('aria-hidden', 'true'); bag.appendChild(badge); }
+          badge.textContent = n;
+        } else if (badge) {
+          badge.remove();
+        }
+      });
+    };
+
+    const refresh = async () => {
+      const res = await fetch('/?section_id=cart-drawer');
+      const html = await res.text();
+      const fresh = new DOMParser().parseFromString(html, 'text/html').querySelector('[data-cart-drawer]');
+      if (fresh) drawer.innerHTML = fresh.innerHTML;
+      setCount();
+    };
+
+    const change = async (line, quantity) => {
+      if (busy) return;
+      busy = true;
+      try {
+        await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ line: line, quantity: quantity }),
+        });
+        await refresh();
+      } catch (e) {
+        window.location.href = '/cart';
+      }
+      busy = false;
+    };
+
+    // close
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-drawer-close]')) { e.preventDefault(); close(); }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !drawer.hidden) close();
+    });
+
+    // bag icon opens the drawer instead of navigating
+    document.addEventListener('click', (e) => {
+      const bag = e.target.closest('.bag-icon');
+      if (!bag) return;
+      e.preventDefault();
+      refresh().then(open);
+    });
+
+    // quantity and remove, delegated
+    document.addEventListener('click', (e) => {
+      const row = e.target.closest('.tb-drawer-item');
+      if (!row) return;
+      const line = parseInt(row.dataset.line, 10);
+      const input = row.querySelector('[data-qty-input]');
+      if (e.target.closest('[data-remove]')) { e.preventDefault(); change(line, 0); }
+      else if (e.target.closest('[data-qty-up]')) { change(line, (parseInt(input.value, 10) || 1) + 1); }
+      else if (e.target.closest('[data-qty-down]')) { change(line, Math.max(0, (parseInt(input.value, 10) || 1) - 1)); }
+    });
+    document.addEventListener('change', (e) => {
+      const input = e.target.closest('[data-qty-input]');
+      if (!input) return;
+      const row = input.closest('.tb-drawer-item');
+      change(parseInt(row.dataset.line, 10), Math.max(0, parseInt(input.value, 10) || 0));
+    });
+
+    // add to cart without leaving the page
+    document.addEventListener('submit', async (e) => {
+      const form = e.target.closest('form[action*="/cart/add"]');
+      if (!form) return;
+      e.preventDefault();
+      const btn = form.querySelector('[type="submit"]');
+      const note = form.querySelector('[data-variant-note]');
+      if (btn) btn.disabled = true;
+      try {
+        const res = await fetch('/cart/add.js', { method: 'POST', body: new FormData(form) });
+        if (!res.ok) throw new Error('add failed');
+        await refresh();
+        open();
+      } catch (err) {
+        // let the browser do it the ordinary way, which lands on the cart page
+        form.submit();
+        return;
+      }
+      if (btn) btn.disabled = false;
+    });
+
+    setCount();
+  }
   /* ---------- Start ---------- */
   function init() {
     initMenu();
@@ -613,6 +741,7 @@
     initFilters();
     initCart();
     initCreditPopup(document);
+    initCartDrawer();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

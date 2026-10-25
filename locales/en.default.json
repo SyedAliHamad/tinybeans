@@ -124,7 +124,10 @@
     "remove_item": "Remove {{ product }}",
     "quantity_for": "Quantity for {{ product }}",
     "was": "Was {{ price }}",
-    "each": "{{ price }} each"
+    "each": "{{ price }} each",
+    "view_bag": "View bag and add a note",
+    "added": "Added to your bag",
+    "add_failed": "Could not add that just now. Please try again."
   },
   "footer": {
     "shop": "Shop",
