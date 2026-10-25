@@ -9,7 +9,8 @@
     <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 96, height: 96 }}">
     <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
   {%- else -%}
-    <link rel="icon" type="image/png" href="{{ 'tinybeans-favicon-64.png' | asset_url }}">
+    <link rel="icon" type="image/svg+xml" href="{{ 'tinybeans-favicon.svg' | asset_url }}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{{ 'tinybeans-favicon-64.png' | asset_url }}">
     <link rel="apple-touch-icon" href="{{ 'tinybeans-favicon-512.png' | asset_url }}">
   {%- endif -%}
   <title>{{ page_title | escape }}{% if current_tags %} – {{ current_tags | join: ', ' | escape }}{% endif %}{% if current_page != 1 %} – {{ current_page }}{% endif %}{% unless page_title contains shop.name %} – {{ shop.name | escape }}{% endunless %}</title>
