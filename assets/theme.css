@@ -416,3 +416,23 @@ a.tb-rating-link{text-decoration:underline;text-underline-offset:3px;padding:8px
 .tb-credit-dialog-close{position:absolute;top:10px;right:10px;width:40px;height:40px;border:0;background:none;color:var(--ink);display:grid;place-items:center;padding:0}
 .tb-credit-dialog-close .icon{width:18px;height:18px}
 .tb-credit-dismiss{display:block;width:100%;margin-top:12px;border:0;background:none;padding:10px;font-size:14px;color:#6c665c;text-decoration:underline;text-underline-offset:3px}
+
+/* ===== V13: rounded corners ===== */
+:root{--r:16px;--r-sm:12px;--r-pill:999px}
+
+/* buttons and anything shaped like one */
+.button,.outlined-light,.tb-add-button,.tb-secondary-button,.tb-checkout,.tb-update,.tb-filter-submit,.site-footer .newsletter button{border-radius:var(--r-pill)}
+
+/* inputs, so they sit with the buttons */
+.site-footer .newsletter input,.tb-variant-fallback,.tb-collection-toolbar select,.tb-cart-controls input,.tb-field input,.tb-field textarea,.contact-form input,.contact-form textarea{border-radius:var(--r-sm)}
+.tb-option-pill span,.tb-quantity,.tb-badge{border-radius:var(--r-pill)}
+.tb-quantity{overflow:hidden}
+
+/* media */
+.tb-product-image,.tile-image,.tb-gallery-main,.tb-cart-image,.category-tile{border-radius:var(--r)}
+.tb-thumb{border-radius:var(--r-sm)}
+
+/* panels and surfaces */
+.tb-delivery-notes,.tb-credit-note,.tb-credit-dialog,.tb-cart-summary,.tb-help-panel,.tb-cart-empty,.tb-score,.instagram-banner,.contact-panel,.tb-editor-hint{border-radius:var(--r)}
+
+@media(max-width:650px){:root{--r:14px;--r-sm:10px}}
