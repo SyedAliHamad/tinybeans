@@ -178,5 +178,17 @@
     },
     "editor_hint": "Add reviews here: install a reviews app (such as Judge.me) and add its block to this section, or add “Shop review” blocks. This message only shows in the theme editor.",
     "editor_hint_empty": "Fill in the “Shop review” blocks in the sidebar with real customer words. Blocks left empty are not shown on your live store. This message only shows in the theme editor."
+  },
+  "welcome_credit": {
+    "offer": "New customers get {{ amount }} store credit.",
+    "offer_cta": "Sign in to claim",
+    "balance": "You have {{ amount }} store credit to spend at checkout.",
+    "pending": "Your {{ amount }} store credit is on its way — it will appear in your account shortly.",
+    "cart_signed_out": "Sign in before checkout to use your store credit.",
+    "cart_balance": "Your {{ amount }} store credit can be applied at checkout.",
+    "promo_cta": "Create an account",
+    "account": "Your account",
+    "sign_in": "Sign in",
+    "editor_hint": "Nothing shows here because the offer is turned off in Theme settings › Welcome credit, or customer accounts are not enabled in Shopify settings. This message only shows in the theme editor."
   }
 }

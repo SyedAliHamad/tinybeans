@@ -71,6 +71,7 @@
         <div class="tb-cart-total"><span>{{ 'cart.total' | t }}</span><strong>{{ cart.total_price | money }}</strong></div>
         {%- if savings > 0 -%}{%- assign savings_money = savings | money -%}<p class="tb-savings">{{ 'cart.you_save' | t: amount: savings_money }}</p>{%- endif -%}
         <button class="button tb-update" type="submit" name="update">{{ 'cart.update' | t }}</button>
+        {% render 'welcome-credit', context: 'cart' %}
         <button class="button tb-checkout" type="submit" name="checkout">{{ 'cart.checkout' | t }}</button>
         <p>{{ 'cart.secure' | t }}</p>
       </aside>

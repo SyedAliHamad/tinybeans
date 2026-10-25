@@ -1,4 +1,12 @@
-{%- if section.settings.announcement != blank -%}
+{%- comment -%}
+  The credit message wins the bar when there is one; otherwise the seasonal line shows.
+  welcome-credit renders nothing for customers who already spent their credit.
+{%- endcomment -%}
+{%- capture credit_bar -%}{% render 'welcome-credit', context: 'bar' %}{%- endcapture -%}
+{%- assign credit_bar = credit_bar | strip -%}
+{%- if credit_bar != blank -%}
+  <div class="announcement announcement-credit">{{ credit_bar }}</div>
+{%- elsif section.settings.announcement != blank -%}
   <div class="announcement">{{ section.settings.announcement | escape }}</div>
 {%- endif -%}
 <header class="site-header">
@@ -20,6 +28,9 @@
     </nav>
     <a class="wordmark" href="{{ routes.root_url }}">{{ section.settings.wordmark | default: "Tiny Beans" | escape }}</a>
     <div class="header-actions">
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="account-link" href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" aria-label="{% if customer %}{{ 'welcome_credit.account' | t }}{% else %}{{ 'welcome_credit.sign_in' | t }}{% endif %}">{% render 'icon', name: 'user' %}</a>
+      {%- endif -%}
       <a class="bag-icon" href="{{ routes.cart_url }}" aria-label="{{ 'general.bag_label' | t: count: cart.item_count }}">
         {% render 'icon', name: 'bag' %}
         {%- if cart.item_count > 0 -%}<small aria-hidden="true">{{ cart.item_count }}</small>{%- endif -%}

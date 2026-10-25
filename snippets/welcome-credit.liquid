@@ -1,0 +1,86 @@
+{%- comment -%}
+  Welcome store credit messaging. One place decides what a visitor is told.
+
+  Usage: {% render 'welcome-credit', context: 'bar' %}
+  Contexts: bar (announcement), cart (above checkout), promo (home page section).
+
+  Renders nothing at all when there is nothing honest to say, so callers can
+  capture the output and fall back to their own copy when it comes back blank.
+
+  States, in order:
+    logged out          -> offer   ("new customers get X, sign in to claim")
+    signed in, balance  -> balance ("you have X to spend")
+    signed in, tagged,
+      zero balance      -> nothing (they had it and spent it)
+    signed in, untagged,
+      zero balance      -> pending (Flow has not granted it yet)
+
+  The tag is added by the same Shopify Flow workflow that grants the credit.
+  Without it a zero balance is ambiguous: never granted, or granted and spent.
+{%- endcomment -%}
+{%- liquid
+  assign show = false
+  if settings.welcome_credit_enabled and shop.customer_accounts_enabled
+    assign show = true
+  endif
+-%}
+{%- if show -%}
+  {%- liquid
+    assign amount = settings.welcome_credit_amount
+    assign state = 'offer'
+    if customer
+      assign balance = customer.store_credit_account.balance
+      assign has_balance = false
+      if balance != blank and balance > 0
+        assign has_balance = true
+      endif
+      if has_balance
+        assign state = 'balance'
+        assign amount = balance | money
+      elsif customer.tags contains settings.welcome_credit_tag
+        assign state = 'spent'
+      else
+        assign state = 'pending'
+      endif
+    endif
+  -%}
+  {%- unless state == 'spent' -%}
+    {%- case context -%}
+
+      {%- when 'bar' -%}
+        {%- if state == 'offer' -%}
+          {{ 'welcome_credit.offer' | t: amount: amount }}
+          <a href="{{ routes.account_login_url }}">{{ 'welcome_credit.offer_cta' | t }}</a>
+        {%- elsif state == 'balance' -%}
+          {{ 'welcome_credit.balance' | t: amount: amount }}
+        {%- else -%}
+          {{ 'welcome_credit.pending' | t: amount: amount }}
+        {%- endif -%}
+
+      {%- when 'cart' -%}
+        {%- if state == 'offer' -%}
+          <p class="tb-credit-note">
+            {{ 'welcome_credit.cart_signed_out' | t: amount: amount }}
+            <a href="{{ routes.account_login_url }}">{{ 'welcome_credit.offer_cta' | t }}</a>
+          </p>
+        {%- elsif state == 'balance' -%}
+          <p class="tb-credit-note is-positive">{{ 'welcome_credit.cart_balance' | t: amount: amount }}</p>
+        {%- endif -%}
+
+      {%- when 'promo' -%}
+        <p class="tb-credit-line">
+          {%- if state == 'offer' -%}
+            {{ 'welcome_credit.offer' | t: amount: amount }}
+          {%- elsif state == 'balance' -%}
+            {{ 'welcome_credit.balance' | t: amount: amount }}
+          {%- else -%}
+            {{ 'welcome_credit.pending' | t: amount: amount }}
+          {%- endif -%}
+        </p>
+        {%- if state == 'offer' -%}
+          <a class="button" href="{{ routes.account_login_url }}">{{ 'welcome_credit.promo_cta' | t }}</a>
+        {%- endif -%}
+
+    {%- endcase -%}
+  {%- endunless -%}
+{%- endif -%}

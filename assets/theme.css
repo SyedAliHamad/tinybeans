@@ -381,3 +381,18 @@ a.tb-rating-link{text-decoration:underline;text-underline-offset:3px;padding:8px
 .tb-delivery-notes .tb-note .icon{width:22px;height:22px;color:var(--olive);margin-top:1px}
 .tb-delivery-notes .tb-note strong{display:block;font-size:15px;font-weight:600;line-height:1.35}
 .tb-delivery-notes .tb-note span{display:block;margin-top:3px;font-size:14px;line-height:1.6;color:#6c665c}
+
+/* ===== V10: welcome store credit ===== */
+.announcement-credit{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;justify-content:center}
+.announcement-credit a{text-decoration:underline;text-underline-offset:3px;font-weight:600}
+.account-link{display:inline-flex;align-items:center;justify-content:center}
+.account-link .icon{width:23px;height:23px}
+.tb-credit-note{margin:16px 0 0;padding:12px 14px;background:var(--cream);font-size:14px;line-height:1.5}
+.tb-credit-note.is-positive{background:#e7ece2}
+.tb-credit-note a{text-decoration:underline;text-underline-offset:3px;font-weight:600}
+.tb-credit-banner-inner{background:var(--cream);padding:clamp(28px,4vw,46px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:center}
+.tb-credit-banner h2{font:400 clamp(34px,4vw,52px)/1.05 'Cormorant Garamond',serif;margin:8px 0 0}
+.tb-credit-copy{margin:14px 0 0;max-width:46ch;line-height:1.7;color:#5f5a50;font-size:15px}
+.tb-credit-action{text-align:right}
+.tb-credit-line{margin:0 0 14px;font-size:15px;line-height:1.6}
+@media(max-width:800px){.tb-credit-banner-inner{grid-template-columns:minmax(0,1fr)}.tb-credit-action{text-align:left}}

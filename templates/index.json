@@ -139,10 +139,19 @@
         "link_label": "Read our story",
         "link": ""
       }
+    },
+    "welcome_credit": {
+      "type": "welcome-credit-banner",
+      "settings": {
+        "eyebrow": "",
+        "heading": "A little something to start with",
+        "copy": "Create an account and your credit is ready to spend at checkout."
+      }
     }
   },
   "order": [
     "hero",
+    "welcome_credit",
     "products",
     "promise",
     "collections",

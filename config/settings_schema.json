@@ -67,6 +67,36 @@
     ]
   },
   {
+    "name": "Welcome credit",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Store credit itself is granted in Shopify admin by a Flow workflow on customer creation. These settings only control what the storefront says about it."
+      },
+      {
+        "type": "checkbox",
+        "id": "welcome_credit_enabled",
+        "label": "Show the welcome credit offer",
+        "info": "Also needs customer accounts turned on in Shopify settings.",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "welcome_credit_amount",
+        "label": "Amount shown to new visitors",
+        "info": "Written out as shoppers should read it, e.g. Rs. 500. Signed-in customers see their real balance instead.",
+        "default": "Rs. 500"
+      },
+      {
+        "type": "text",
+        "id": "welcome_credit_tag",
+        "label": "Customer tag set when credit is granted",
+        "info": "Must match the tag your Flow workflow adds. Without it a zero balance cannot be told apart from credit that has not arrived yet.",
+        "default": "welcome-credit-granted"
+      }
+    ]
+  },
+  {
     "name": "Stock messages",
     "settings": [
       {
