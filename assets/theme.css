@@ -396,3 +396,13 @@ a.tb-rating-link{text-decoration:underline;text-underline-offset:3px;padding:8px
 .tb-credit-action{text-align:right}
 .tb-credit-line{margin:0 0 14px;font-size:15px;line-height:1.6}
 @media(max-width:800px){.tb-credit-banner-inner{grid-template-columns:minmax(0,1fr)}.tb-credit-action{text-align:left}}
+
+/* ===== V11: six-up collection grid ===== */
+.tb-collection-grid{grid-template-columns:repeat(6,minmax(0,1fr));column-gap:14px;row-gap:30px}
+.tb-collection-grid .tb-product-name{font-size:14px;margin:10px 0 3px;line-height:1.4}
+.tb-collection-grid .tb-product-price{font-size:13px}
+.tb-collection-grid .tb-badge{left:8px;top:8px;padding:4px 8px;font-size:11px}
+@media(max-width:1280px){.tb-collection-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:1080px){.tb-collection-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:860px){.tb-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.tb-collection-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:25px}}
