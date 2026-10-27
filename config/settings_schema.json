@@ -77,8 +77,8 @@
         "type": "checkbox",
         "id": "welcome_credit_enabled",
         "label": "Show welcome credit messaging",
-        "info": "Only changes what the storefront says. The credit itself is granted by a Shopify Flow workflow in admin (see WELCOME-CREDIT-SETUP.md). Leave this off until that workflow exists, or new customers are promised credit that never arrives.",
-        "default": false
+        "info": "Only changes what the storefront says. The credit itself is granted by a Shopify Flow workflow in admin (see WELCOME-CREDIT-SETUP.md). Confirm a real signup receives both the balance and the tag before relying on this.",
+        "default": true
       },
       {
         "type": "text",
