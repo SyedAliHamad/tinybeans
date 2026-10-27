@@ -13,6 +13,7 @@
       "type": "winter-hero",
       "settings": {
         "video": "shopify://files/videos/6949123-hd_1920_1080_25fps.mp4",
+        "video_mobile": "shopify://files/videos/6949123-hd_1920_1080_25fps.mp4",
         "eyebrow": "",
         "heading": "Warm little layers for winter.",
         "copy": "Soft jackets, knits and rompers for newborns to 3 years.",
