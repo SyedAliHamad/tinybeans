@@ -12,7 +12,14 @@
     "brand_olive": "#6c6e53",
     "brand_cream": "#ede1d1",
     "whatsapp_number": "+923714202012",
+    "contact_email": "sales@tinybeans.pk",
     "instagram_url": "https://www.instagram.com/tinybeans.pk/",
+    "sections": {
+      "cart-drawer": {
+        "type": "cart-drawer",
+        "settings": {}
+      }
+    },
     "content_for_index": []
   }
 }
