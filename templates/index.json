@@ -199,13 +199,6 @@
     "review_wall": {
       "type": "review-wall",
       "blocks": {
-        "shot_DaDYyg": {
-          "type": "shot",
-          "settings": {
-            "image": "shopify://shop_images/review_3.jpg",
-            "caption": ""
-          }
-        },
         "shot_MEbx8h": {
           "type": "shot",
           "settings": {
@@ -227,6 +220,13 @@
             "caption": ""
           }
         },
+        "shot_DaDYyg": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/review_3.jpg",
+            "caption": ""
+          }
+        },
         "shot_KNWUH3": {
           "type": "shot",
           "settings": {
@@ -236,10 +236,10 @@
         }
       },
       "block_order": [
-        "shot_DaDYyg",
         "shot_MEbx8h",
         "shot_TPaNYr",
         "shot_3rF49y",
+        "shot_DaDYyg",
         "shot_KNWUH3"
       ],
       "settings": {
