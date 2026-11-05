@@ -1,8 +1,10 @@
 {%- comment -%}
   Renders an inline SVG icon. Usage: {% render 'icon', name: 'truck' %}
-  Icons: heart, truck, cash, exchange, camera, message, whatsapp, instagram, facebook, email, menu, close, bag, user
+  Icons: heart, truck, cash, exchange, camera, message, whatsapp, instagram, facebook, email, menu, close, bag, user, bean
 {%- endcomment -%}
 {%- case name -%}
+  {%- when 'bean' -%}
+    <svg class="icon icon-bean" viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="currentColor"><path d="M51.10 32.45 C53.40 35.07 54.18 38.60 53.47 41.74 C52.75 44.89 50.77 47.71 48.14 49.57 C45.52 51.43 42.30 52.26 39.33 52.51 C36.35 52.76 33.57 52.57 31.02 51.94 C28.46 51.30 26.20 50.16 24.20 48.89 C22.21 47.62 20.41 46.25 18.82 44.64 C17.24 43.03 15.91 41.21 14.64 39.23 C13.38 37.24 12.17 35.02 11.35 32.45 C10.54 29.87 10.07 26.95 10.25 23.84 C10.43 20.74 11.44 17.43 13.60 15.03 C15.75 12.62 18.92 11.17 22.16 11.07 C25.40 10.97 28.68 12.35 31.02 14.62 C33.35 16.90 34.61 19.68 35.58 21.42 C36.55 23.16 37.42 24.09 38.47 24.99 C39.52 25.90 40.74 26.57 43.04 27.47 C45.34 28.36 48.80 29.82 51.10 32.45 Z"/></svg>
   {%- when 'heart' -%}
     <svg class="icon icon-heart" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.1A4.4 4.4 0 0 1 12 7.2a4.4 4.4 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20Z"/></svg>
   {%- when 'truck' -%}

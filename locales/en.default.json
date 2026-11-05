@@ -99,7 +99,8 @@
       "one": "Show {{ count }} piece",
       "other": "Show {{ count }} pieces"
     },
-    "close_filters": "Close filters"
+    "close_filters": "Close filters",
+    "age_editor_hint": "These links only filter once the Size filter is turned on in the free Search & Discovery app. Until then they open the collection unfiltered. This message only shows in the theme editor."
   },
   "cart": {
     "title": "Your bag",

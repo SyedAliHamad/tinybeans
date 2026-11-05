@@ -1,0 +1,103 @@
+{%- comment -%}
+  Shop by age. Each block is one rung of the ladder: a label people read, and
+  the size value it filters on, which must match the product option exactly.
+
+  The links use Shopify's storefront filter parameter. That only does anything
+  once the Size filter is enabled in Search & Discovery — until then every link
+  lands on an unfiltered collection, which is why the editor hint says so.
+{%- endcomment -%}
+{%- liquid
+  assign target = section.settings.collection
+  assign base = routes.all_products_collection_url
+  if target != blank
+    assign base = target.url
+  endif
+  assign option_key = section.settings.option_name | downcase | strip
+-%}
+{%- if section.blocks.size > 0 -%}
+  <section class="section container tb-age">
+    <div class="tb-age-panel">
+
+      <div class="tb-age-intro">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        <h2>{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.description != blank -%}
+          <p class="tb-age-copy">{{ section.settings.description | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="tb-age-rule" aria-hidden="true"></div>
+
+      <ul class="tb-age-pills" role="list">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.label != blank -%}
+            {%- liquid
+              assign value = block.settings.size_value | default: block.settings.label
+              assign href = base
+              if block.settings.size_value != blank
+                assign encoded = block.settings.size_value | url_encode
+                assign href = base | append: '?filter.v.option.' | append: option_key | append: '=' | append: encoded
+              endif
+            -%}
+            <li {{ block.shopify_attributes }}>
+              <a class="tb-age-pill" href="{{ href }}">{{ block.settings.label | escape }}</a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+
+      {%- if section.settings.show_mark -%}
+        <span class="tb-age-mark" aria-hidden="true">{% render 'icon', name: 'bean' %}</span>
+      {%- endif -%}
+
+    </div>
+
+    {%- if request.design_mode -%}
+      <p class="tb-editor-hint">{{ 'collections.age_editor_hint' | t }}</p>
+    {%- endif -%}
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Shop by age",
+  "tag": "div",
+  "class": "tb-age-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Each age links to the collection filtered by that size. The links only filter once the Size filter is turned on in the free Search & Discovery app; until then they open the collection unfiltered."
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Find the right fit" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop by age" },
+    { "type": "text", "id": "description", "label": "Description", "default": "Soft picks for every little stage." },
+    { "type": "collection", "id": "collection", "label": "Collection to filter", "info": "Leave empty to use all products." },
+    { "type": "text", "id": "option_name", "label": "Product option name", "info": "The option the sizes live on, exactly as spelled on your products. Usually Size.", "default": "Size" },
+    { "type": "checkbox", "id": "show_mark", "label": "Show the bean watermark", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "age",
+      "name": "Age",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "info": "What shoppers read, e.g. 0–3 months." },
+        { "type": "text", "id": "size_value", "label": "Size value", "info": "Must match the product option value exactly, e.g. 0-3 months. Leave empty to link to the collection unfiltered." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by age",
+      "blocks": [
+        { "type": "age", "settings": { "label": "0–3 months",   "size_value": "0-3 months" } },
+        { "type": "age", "settings": { "label": "3–6 months",   "size_value": "3-6 months" } },
+        { "type": "age", "settings": { "label": "6–9 months",   "size_value": "6-9 months" } },
+        { "type": "age", "settings": { "label": "9–12 months",  "size_value": "9-12 months" } },
+        { "type": "age", "settings": { "label": "12–24 months", "size_value": "12-24 months" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
