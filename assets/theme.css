@@ -514,3 +514,8 @@ a.tb-rating-link{text-decoration:underline;text-underline-offset:3px;padding:8px
 .tb-wall-dialog-close .icon{width:17px;height:17px}
 @media(max-width:650px){.tb-wall-head{display:block}.tb-wall-nav{display:none}.tb-wall-item{height:270px}.tb-wall-dialog-close{top:-14px;right:-6px}}
 @media(prefers-reduced-motion:reduce){.tb-wall-shot,.tb-wall-arrow{transition:none}.tb-wall-band{scroll-behavior:auto}}
+
+/* ===== V17: review wall spacing ===== */
+.tb-wall{padding-top:0;padding-bottom:72px}
+.tb-wall-head{border-top:1px solid #ded8cd;padding-top:42px}
+@media(max-width:650px){.tb-wall{padding-bottom:58px}.tb-wall-head{padding-top:34px}}
