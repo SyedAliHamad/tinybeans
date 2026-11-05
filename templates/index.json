@@ -195,6 +195,16 @@
         "link_label": "Read our story",
         "link": ""
       }
+    },
+    "review_wall": {
+      "type": "review-wall",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "eyebrow": "In their words",
+        "heading": "What parents tell us",
+        "description": "Messages from customers after their parcels arrived."
+      }
     }
   },
   "order": [
@@ -205,6 +215,7 @@
     "collections",
     "why",
     "details",
-    "story"
+    "story",
+    "review_wall"
   ]
 }

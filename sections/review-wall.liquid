@@ -1,0 +1,107 @@
+{%- comment -%}
+  Review wall. A horizontal band of chat screenshots, one block each.
+
+  Screenshots are text, so nothing is cropped: every item keeps its own aspect
+  ratio and the band fixes the height instead, which is why widths vary. The
+  ratio comes from the uploaded image itself, so the browser reserves the right
+  space before the picture arrives and the row does not jump as it loads.
+
+  Tapping opens the full screenshot, because at band height the chat is not
+  readable. One dialog is reused for every item rather than one per block.
+{%- endcomment -%}
+{%- liquid
+  assign shots = 0
+  for block in section.blocks
+    if block.settings.image != blank
+      assign shots = shots | plus: 1
+    endif
+  endfor
+-%}
+{%- if shots > 0 or request.design_mode -%}
+  <section class="section container tb-wall" data-review-wall>
+
+    <div class="tb-wall-head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow olive">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        <h2>{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.description != blank -%}
+          <p class="tb-wall-copy">{{ section.settings.description | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if shots > 1 -%}
+        <div class="tb-wall-nav" data-wall-nav>
+          <button type="button" class="tb-wall-arrow" data-wall-prev aria-label="{{ 'reviews.wall_prev' | t }}">{% render 'icon', name: 'arrow-left' %}</button>
+          <button type="button" class="tb-wall-arrow" data-wall-next aria-label="{{ 'reviews.wall_next' | t }}">{% render 'icon', name: 'arrow-right' %}</button>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if shots > 0 -%}
+      <ul class="tb-wall-band" data-wall-band role="list">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.image != blank -%}
+            {%- assign img = block.settings.image -%}
+            {%- capture alt -%}{% if block.settings.caption != blank %}{{ block.settings.caption }}{% else %}{{ 'reviews.wall_alt' | t }}{% endif %}{%- endcapture -%}
+            <li class="tb-wall-item" style="aspect-ratio:{{ img.aspect_ratio }}" {{ block.shopify_attributes }}>
+              <button type="button" class="tb-wall-shot" data-wall-open
+                      data-full="{{ img | image_url: width: 1400 }}"
+                      data-alt="{{ alt | strip | escape }}"
+                      aria-label="{{ 'reviews.wall_open' | t }}">
+                {{ img | image_url: width: 700 | image_tag:
+                     loading: 'lazy',
+                     sizes: '(max-width: 650px) 60vw, 300px',
+                     widths: '280, 420, 700',
+                     alt: alt | strip }}
+              </button>
+              {%- if block.settings.caption != blank -%}
+                <p class="tb-wall-cap">{{ block.settings.caption | escape }}</p>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if request.design_mode and shots == 0 -%}
+      <p class="tb-editor-hint">{{ 'reviews.wall_editor_hint' | t }}</p>
+    {%- endif -%}
+
+    <dialog class="tb-wall-dialog" data-wall-dialog aria-label="{{ 'reviews.wall_alt' | t }}">
+      <button type="button" class="tb-wall-dialog-close" data-wall-close aria-label="{{ 'reviews.wall_close' | t }}">{% render 'icon', name: 'close' %}</button>
+      <img data-wall-full alt="">
+    </dialog>
+
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Review wall",
+  "tag": "div",
+  "class": "tb-wall-section",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "One screenshot per block, swiped sideways. Blur or crop names, profile photos and phone numbers before uploading: these are your customers' private messages."
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "In their words" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What parents tell us" },
+    { "type": "text", "id": "description", "label": "Description", "default": "Messages from customers after their parcels arrived." }
+  ],
+  "blocks": [
+    {
+      "type": "shot",
+      "name": "Screenshot",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Screenshot", "info": "Any shape. The band keeps the height even and lets the width follow." },
+        { "type": "text", "id": "caption", "label": "Caption", "info": "Optional, shown under the screenshot. A first name and the app is plenty, e.g. Ayesha on WhatsApp." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Review wall", "blocks": [{ "type": "shot" }, { "type": "shot" }, { "type": "shot" }] }]
+}
+{% endschema %}

@@ -730,6 +730,55 @@
 
     setCount();
   }
+
+  /* ---------- Review wall ----------
+     A scrolling band of chat screenshots. At band height the text is not
+     readable, so each one opens full size in a shared dialog. The arrows page
+     by roughly a viewport and disable at the ends, since a horizontal scroller
+     with no affordance is easy to miss on a desktop. */
+  function initReviewWall(root) {
+    root.querySelectorAll('[data-review-wall]').forEach((wall) => {
+      if (wall.dataset.mounted) return;
+      wall.dataset.mounted = '1';
+
+      const band = wall.querySelector('[data-wall-band]');
+      const dlg = wall.querySelector('[data-wall-dialog]');
+      const full = wall.querySelector('[data-wall-full]');
+      const prev = wall.querySelector('[data-wall-prev]');
+      const next = wall.querySelector('[data-wall-next]');
+      if (!band) return;
+
+      const page = () => Math.max(160, Math.round(band.clientWidth * 0.8));
+      const scrollBy = (dir) => band.scrollBy({ left: dir * page(), behavior: reduceMotion ? 'auto' : 'smooth' });
+
+      const sync = () => {
+        if (!prev || !next) return;
+        const max = band.scrollWidth - band.clientWidth - 2;
+        prev.disabled = band.scrollLeft <= 2;
+        next.disabled = band.scrollLeft >= max;
+      };
+      if (prev) prev.addEventListener('click', () => scrollBy(-1));
+      if (next) next.addEventListener('click', () => scrollBy(1));
+      band.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      sync();
+
+      if (!dlg || !full) return;
+      const close = () => { if (dlg.open) dlg.close(); };
+      wall.querySelectorAll('[data-wall-open]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          full.src = btn.dataset.full;
+          full.alt = btn.dataset.alt || '';
+          if (typeof dlg.showModal === 'function') { try { dlg.showModal(); } catch (e) { dlg.setAttribute('open', ''); } }
+          else dlg.setAttribute('open', '');
+        });
+      });
+      wall.querySelectorAll('[data-wall-close]').forEach((b) => b.addEventListener('click', close));
+      dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+      // free the full-size image again once it is out of view
+      dlg.addEventListener('close', () => { full.removeAttribute('src'); });
+    });
+  }
   /* ---------- Start ---------- */
   function init() {
     initMenu();
@@ -742,6 +791,7 @@
     initCart();
     initCreditPopup(document);
     initCartDrawer();
+    initReviewWall(document);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
@@ -752,5 +802,6 @@
     e.target.querySelectorAll('[data-product-section]').forEach(initProduct);
     e.target.querySelectorAll('[data-product-section]').forEach(initFloatVideo);
     initCardHover(e.target);
+    initReviewWall(e.target);
   });
 })();

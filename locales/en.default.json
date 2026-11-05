@@ -181,7 +181,13 @@
       "other": "Based on {{ count }} reviews"
     },
     "editor_hint": "Add reviews here: install a reviews app (such as Judge.me) and add its block to this section, or add “Shop review” blocks. This message only shows in the theme editor.",
-    "editor_hint_empty": "Fill in the “Shop review” blocks in the sidebar with real customer words. Blocks left empty are not shown on your live store. This message only shows in the theme editor."
+    "editor_hint_empty": "Fill in the “Shop review” blocks in the sidebar with real customer words. Blocks left empty are not shown on your live store. This message only shows in the theme editor.",
+    "wall_alt": "A message from a customer",
+    "wall_open": "Open this message full size",
+    "wall_close": "Close",
+    "wall_prev": "Previous messages",
+    "wall_next": "More messages",
+    "wall_editor_hint": "Add a screenshot to each block. Blur or crop names, profile photos and phone numbers first: these are private messages. This note only shows in the theme editor."
   },
   "welcome_credit": {
     "offer": "New customers get {{ amount }} store credit.",
