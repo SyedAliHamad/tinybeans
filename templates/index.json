@@ -32,6 +32,62 @@
         "link_text": "View all"
       }
     },
+    "shop_by_age": {
+      "type": "shop-by-age",
+      "blocks": {
+        "a1": {
+          "type": "age",
+          "settings": {
+            "label": "0–3 months",
+            "size_value": "0-3 months"
+          }
+        },
+        "a2": {
+          "type": "age",
+          "settings": {
+            "label": "3–6 months",
+            "size_value": "3-6 months"
+          }
+        },
+        "a3": {
+          "type": "age",
+          "settings": {
+            "label": "6–9 months",
+            "size_value": "6-9 months"
+          }
+        },
+        "a4": {
+          "type": "age",
+          "settings": {
+            "label": "9–12 months",
+            "size_value": "9-12 months"
+          }
+        },
+        "a5": {
+          "type": "age",
+          "settings": {
+            "label": "12–24 months",
+            "size_value": "12-24 months"
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5"
+      ],
+      "disabled": true,
+      "settings": {
+        "eyebrow": "Find the right fit",
+        "heading": "Shop by age",
+        "description": "Soft picks for every little stage.",
+        "collection": "",
+        "option_name": "Size",
+        "show_mark": true
+      }
+    },
     "promise": {
       "type": "brand-promise",
       "blocks": {
@@ -139,61 +195,6 @@
         "copy": "Somewhere along the way, newborn essentials became unnecessarily expensive. We started Tiny Beans with a simple belief: quality, comfort and beautiful design should be within reach for more families.",
         "link_label": "Read our story",
         "link": ""
-      }
-    },
-    "shop_by_age": {
-      "type": "shop-by-age",
-      "blocks": {
-        "a1": {
-          "type": "age",
-          "settings": {
-            "label": "0–3 months",
-            "size_value": "0-3 months"
-          }
-        },
-        "a2": {
-          "type": "age",
-          "settings": {
-            "label": "3–6 months",
-            "size_value": "3-6 months"
-          }
-        },
-        "a3": {
-          "type": "age",
-          "settings": {
-            "label": "6–9 months",
-            "size_value": "6-9 months"
-          }
-        },
-        "a4": {
-          "type": "age",
-          "settings": {
-            "label": "9–12 months",
-            "size_value": "9-12 months"
-          }
-        },
-        "a5": {
-          "type": "age",
-          "settings": {
-            "label": "12–24 months",
-            "size_value": "12-24 months"
-          }
-        }
-      },
-      "block_order": [
-        "a1",
-        "a2",
-        "a3",
-        "a4",
-        "a5"
-      ],
-      "settings": {
-        "eyebrow": "Find the right fit",
-        "heading": "Shop by age",
-        "description": "Soft picks for every little stage.",
-        "collection": "",
-        "option_name": "Size",
-        "show_mark": true
       }
     }
   },
