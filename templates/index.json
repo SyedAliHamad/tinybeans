@@ -78,12 +78,11 @@
         "a4",
         "a5"
       ],
-      "disabled": true,
       "settings": {
         "eyebrow": "Find the right fit",
         "heading": "Shop by age",
         "description": "Soft picks for every little stage.",
-        "collection": "",
+        "collection": "winter-collection",
         "option_name": "Size",
         "show_mark": true
       }
