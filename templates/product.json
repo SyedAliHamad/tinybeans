@@ -55,10 +55,63 @@
         "review_2",
         "review_3"
       ]
+    },
+    "review_wall": {
+      "type": "review-wall",
+      "blocks": {
+        "shot_DaDYyg": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/review_3.jpg",
+            "caption": ""
+          }
+        },
+        "shot_MEbx8h": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/review_5.jpg",
+            "caption": ""
+          }
+        },
+        "shot_TPaNYr": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/review_1.jpg",
+            "caption": ""
+          }
+        },
+        "shot_3rF49y": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/review_2.jpg",
+            "caption": ""
+          }
+        },
+        "shot_KNWUH3": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/review_4.jpg",
+            "caption": ""
+          }
+        }
+      },
+      "block_order": [
+        "shot_DaDYyg",
+        "shot_MEbx8h",
+        "shot_TPaNYr",
+        "shot_3rF49y",
+        "shot_KNWUH3"
+      ],
+      "settings": {
+        "eyebrow": "In their words",
+        "heading": "What parents tell us",
+        "description": "Messages from customers after their parcels arrived."
+      }
     }
   },
   "order": [
     "main",
-    "reviews"
+    "reviews",
+    "review_wall"
   ]
 }
